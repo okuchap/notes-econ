@@ -19,7 +19,7 @@ Study Notes on Economics
   - Prophet Inequalities can give the lower bound of principal's payoff in the simple mechanism.
 
 **2018-07**
-- [Spiegler (2016), Bayesian Networks and Boundedly Rational Expectations](https://academic.oup.com/qje/article-abstract/131/3/1243/2461139?redirectedFrom=PDF)
+- [Spiegler (2016, QJE), Bayesian Networks and Boundedly Rational Expectations](https://academic.oup.com/qje/article-abstract/131/3/1243/2461139?redirectedFrom=PDF)
 
-- [Spiegler (2017), “Data Monkeys”: A Procedural Model of Extrapolation from Partial Statistics](https://academic.oup.com/restud/article-abstract/84/4/1818/2929388)
+- [Spiegler (2017, REStud), “Data Monkeys”: A Procedural Model of Extrapolation from Partial Statistics](https://academic.oup.com/restud/article-abstract/84/4/1818/2929388)
 

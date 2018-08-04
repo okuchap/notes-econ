@@ -1,0 +1,1525 @@
+\documentclass[11pt,a4paper,dvipdfmx]{article}
+%\documentclass[autodetect-engine,dvipdfmx-if-dvi,ja=standard]{bxjsarticle}
+
+\usepackage{ascmac}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[noBBpl]{mathpazo}
+%\linespread{1.05}
+\usepackage{mathtools, amsmath, amssymb, amsthm}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{braket}
+%\usepackage{amssymb}
+\usepackage{url}
+\usepackage{cases}
+\usepackage{bbm}
+\usepackage[all]{xy}
+
+%% citation
+\usepackage[longnamesfirst]{natbib}
+
+%
+\theoremstyle{plain}
+\newtheorem{thm}{Thm.}[section]
+\newtheorem{lem}{Lem.}[section]
+\newtheorem{cor}{Cor.}[section]
+\newtheorem{prop}{Prop.}[section]
+\newtheorem{df}{Def.}[section]
+\newtheorem{eg}{e.g.}[section]
+\newtheorem{rem}{Rem.}[section]
+\newtheorem{ass}{Ass.}[section]
+%
+
+\usepackage{listings}
+\lstset{%
+language={python},%
+basicstyle={\ttfamily\footnotesize},%ソースコードの文字を小さくする
+frame={single},
+commentstyle={\footnotesize\itshape},%コメントアウトの文字を小さくする
+breaklines=true,%行が長くなったときの改行。trueの場合は改行する。
+numbers=left,%行番号を左に書く。消す場合はnone。
+xrightmargin=3zw,%左の空白の大きさ
+xleftmargin=3zw,%右の空白の大きさ
+stepnumber=1,%行番号を1から始める場合こうする(たぶん)
+numbersep=1zw,%行番号と本文の間隔。
+}
+
+%\usepackage[dvipdfmx]{graphicx}
+%% color packageとdvipdfmxは相性が悪いらしい
+%% https://qiita.com/zr_tex8r/items/442b75b452b11bee8049
+\usepackage{graphicx}
+
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} %This changes the margins.
+\usepackage{float}
+%\author{Kyohei Okumura}
+\global\long\def\T#1{#1^{\top}}
+
+\newcommand{\id}{\textnormal{id}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mG}{\mathcal{G}}
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mO}{\mathcal{O}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mT}{\mathcal{T}}
+\newcommand{\mV}{\mathcal{V}}
+\newcommand{\mX}{\mathcal{X}}
+\renewcommand{\Re}{\mathrm{Re}}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\bar}{\overline}
+\renewcommand{\epsilon}{\varepsilon}
+% \renewcommand{\span}{\mathrm{span}}
+\newcommand{\defi}{\stackrel{\Delta}{\Longleftrightarrow}}
+\newcommand{\equi}{\Longleftrightarrow}
+\newcommand{\s}{\succsim}
+\newcommand{\p}{\precsim}
+\newcommand{\join}{\vee}
+\newcommand{\meet}{\wedge}
+\newcommand{\E}{\mathbbm{E}}
+%\newcommand{\1}{\mathbbm{1}}
+\newcommand{\indep}{\mathop{\perp\!\!\!\!\perp}}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Card}{Card}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+
+\usepackage{color}
+\newcommand{\kcomment}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\ocomment}[1]{{\textcolor{red}{#1}}}
+
+
+\begin{document}
+\title{Spiegler (2016, QJE) \\
+Bayesian Networks and Boundedly Rational Expectations
+}
+\author{Kyohei Okumura{\footnote{E-mail: kyohei.okumura@gmail.com}
+}}
+\date{\today}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motivation}
+\begin{itemize}
+	\item 限定合理性，特にnonrational expectationが形成されるメカニズムを明らかにする．
+	\item nonrational expectationsの下で何が起こるかを分析する．
+\end{itemize}
+
+\section{Approach}
+\begin{itemize}
+	\item DAG(directed acyclic graph)を人々が心の内に抱いているCausality modelの表現と考える．
+	\item 人々は，objective probability distributions $p(x_1, \dots, x_n)$にDAG $R$をfitさせることでsubjective belief $p_R(x_1, \dots, x_n)$を形成し，その上で意思決定を行う　と考える．
+	\item 定常状態(i.e. $p_R(x) \equiv p(x)$となっている状態)を分析する．そのために，均衡概念(personal equilibrium)を定義．
+\end{itemize}
+
+\section{Contribution}
+\begin{enumerate}
+	\item Bayesian network factorization formula (bayesian networkの記述する条件付独立性に基づいて，確率分布を条件付確率分布の積に分解する公式)を，意思決定の均衡モデルに統合させた初の試み．
+	\begin{itemize}
+		\item 既存のモデルに容易に限定合理性を導入できる．
+		\item 限定合理的な因果関係を$R$を用いて記述した上で，$p(x_{-1} \mid x_1)$を$p_R(x_{-1} \mid x_1)$で置換．
+	\end{itemize}
+	\item Causal/Statistical reasoningの誤りを記述する簡便な枠組みを与える．
+		\begin{itemize}
+			\item reverse causation (因果関係の勘違い): DAGで矢印を逆に張ることに対応．
+			\item removal of a link (変数間の関係の見落とし): DAGで枝を消去することに対応．
+			\item この２つは，典型的な人々の勘違いを描写しているのでは？と考え，IllustrationsとGeneral Analysisの項で少し詳し目に分析．
+		\end{itemize}
+	\item General characterizations of choice behavior
+		\begin{itemize}
+			\item rationalなときとirrationalなときで行動が変わるための条件は？
+			\item あるcausality model $R$が，常に他のcausality model $R'$より優れているといったことはあるのか？(答: ない．)
+		\end{itemize}
+	\item Bayesian networks as a unifying framework
+		\begin{itemize}
+			\item nonrational expectationを分析した既存の議論をある程度整理して議論できそう？
+		\end{itemize}
+\end{enumerate}
+
+
+%%%
+\newpage
+\section{Model}
+\begin{itemize}	
+	\item $X := X_1 \times \cdots \times X_N$: a finite set of states. しばしば$X_1 = A$と表す．
+	\item $p \in \Delta(X_1, \dots, X_n)$: objective probability distribution
+	\item \ocomment{$X_i$を値域に持つ確率変数$\tilde{X}_i$ $(i \in [n])$}
+	\item causality model: DAG $(N, R)$, (しばしば，$N$を省略して$R$でDAGを表す．)
+		\begin{itemize}
+			\item the set of nodes $N := \{1, \dots, n\}$ ($i \in N$は，確率変数$\tilde{X}_i$に対応)
+			\item the set of edges $R := N \times N$.
+			\item $(i, j) \in N$は，node $i$からnode $j$の間に有向辺が存在することを表す．$i \rightarrow j$と表すことも．
+			\item イメージ:「$i$が$j$の直接の原因」
+			\item $R(i) := \{j \in N \mid (j, i) \in R \}$: node $i$の親の集合．
+			\item $M \subseteq N$のとき，$x_M := (x_i)_{i \in M}$.
+		\end{itemize}
+\end{itemize}
+
+\begin{screen}
+\begin{eg}[DAGの例]
+	$N := \{1,2,\dots,7\}$, \\
+	$R:=\{(1,2), (1,3), (2,4), (2,5), (3,6), (4,7), (5,7), (6,5), (6,7)\}$ \\ 
+	$R(5) = \{2,6\}$, $x_{R(5)} = (x_2, x_6)$, $\text{Descendants}(6) = \{5, 7\}$, $\text{NonDescendants}(6) = \{1,2,3,4\}$
+\end{eg}
+\begin{figure}[H]
+  \centering
+    \includegraphics[height=5cm]{image/dag.png}
+\end{figure}
+\end{screen}
+
+\begin{itemize}
+	\item DMは，$p$を元に，$R$を通して信念(主観的確率)$p_R$を形成した上で，最適化問題を解く．
+	\item 一般には，$p = p_R$とは限らず．
+\end{itemize}
+
+$$p_R(x) := \prod_{i=1}^n p(x_i \mid x_{R(i)})$$
+
+$$\max_{p(x_1)} \sum_{x_{-1}} p_R(x_{-1} \mid x_1) u(x)$$
+
+\begin{eg}[$p_R$の構成例]
+	Fix $N:=\{1,2,3\}$ and $p \in \Delta(X_1, X_2, X_3)$. Suppose that DM has his subjective DAG $R: 1 \rightarrow 2 \leftarrow 3$.	Then, he constructs his subjective belief $p_R$ as follows:
+	$$
+	p_R(x_1, x_2, x_3) := p(x_1) p(x_3) p(x_2 \mid x_1, x_3)
+	$$
+\end{eg}
+
+\begin{lem}[$p_R$ is a probability distribution]
+	For any $p \in \Delta(X)$, the function $p_R: X \to [0,1]$ is also a probability distribution, i.e., $p_R \in \Delta(X)$.
+\end{lem}
+\begin{proof}
+	Assume w.l.o.g. that $(1, \dots, n)$ are topologically sorted.
+	\footnote{
+	DAGにおいて，nodeの順番をうまく並び替えて，$i \rightarrow j \implies i < j$とできることが知られている．
+	(i.e. ある関数$f: N \to N$が存在し，$(i, j) \in R \implies f(i) < f(j)$となる．)このとき明らかに，任意の$i$について，$j > i$ならば，$j \notin R(i)$.
+	}
+	Then, 
+	\begin{align*}
+		\sum_x p_R(x) &= \sum_{x_1} \cdots \sum_{x_n} \prod_{i=1}^n p(x_i \mid x_{R(i)}) \\
+		&= \sum_{x_1} \cdots \sum_{x_{n-1}} \prod_{i \leq n-1} p(x_i \mid x_{R(i)}) \underbrace{\sum_{x_n} p(x_n \mid x_{R(n)})}_{=1} \\
+		&=  \sum_{x_1} \cdots \sum_{x_{n-1}} \prod_{i \leq n-1} p(x_i \mid x_{R(i)}) \\
+		&= \cdots \\
+		&= 1
+	\end{align*}
+\end{proof}
+
+\begin{df}[consistent]
+	$p$ is consistent with $R$(, or $p$ factorizes over $R$) \\
+	$\defi$ $p(x) = \prod_{i=1}^n p(x_i \mid x_{R(i)})$
+	$\equi$ $p = p_R$
+\end{df}
+
+\begin{itemize}
+	\item objective probability distribution $p$ is consistent with the true DAG $R^*$.
+\end{itemize}
+
+\begin{ass}
+	node $1$ is ancestral in both $R$ and $R^*$, i.e., $R(1) = R^*(1) = \emptyset$.
+\end{ass}
+
+\begin{df}[Conditional Independence]
+	$V := \{ V_1, \dots, V_n\}$: a set of random variables, $X, Y, Z \subseteq V$. \\
+	\[
+	X \perp Y \mid Z \defi [p(Y=y, Z=z) > 0 \implies p(X=x \mid Y=y, Z = z)
+	= p(X=x \mid Z = z)]
+	\]
+\end{df}
+
+\begin{lem}[local independencies] \label{local_indep}
+	$p$ factorizes over $R$ iff the following holds:\\
+	$$
+	\tilde{X}_{\text{NonDescendants}(i)} \perp \tilde{X}_i \mid \tilde{X}_{R(i)}
+	$$
+\end{lem}
+
+\begin{cor}
+	Let $R$ be a DAG. Suppose that $R' \supseteq R$ and $R'$ is also a DAG. If $p$ is consistent with $R$, then $p$ is also consistent with $R'$.
+\end{cor}
+\begin{proof}
+	Suppose that $R' \supseteq R$, and $p$ is consistent with $R$. 
+	Assume w.l.o.g that $(N, R)$ is topologically sorted.
+	Since $p$ is consistent with $R$,
+	$
+	p(x) = \prod_i p(x_i \mid x_{R(i)}).
+	$
+	Consider the term $p(x_i \mid x_{R(i)})$ for each $i$. Since $R'$ is a DAG, $x_{R'(i)} = x_{R(i)}$, or $x_{R'(i)} = x_{R(i)} \sqcup x_{N'}$, where $N' \subseteq \text{NonDescendants}(i)$; otherwise, $R'$ has a cycle. Then, by Lem.\ref{local_indep},
+	$p(x_i \mid x_{R'(i)}) = p(x_i \mid x_{R(i)})$.
+\end{proof}
+
+\begin{eg}[local independencies]
+下図のようなbayesian network structure $R$ (i.e. DAG)を考える．確率変数の従う分布を$p$とする．Difficulty: 受けた授業の難易度, Intelligence: 生徒の賢さ, Grade: 生徒の成績, SAT: SATの成績, Letter: 推薦状の強さ．
+
+$R(\text{Letter}) = \{\text{Grade}\}$, $\text{NonDescendants}(\text{Letter}) = \{\text{Difficulty, Intelligence, SAT}\}$.
+いま，$p$ is consistent with $R$とする．
+\footnote{
+$p$ factorizes over $(N, R)$のとき，DAGと分布の組$((N,R), p)$を\textit{bayesian network}と呼ぶ．
+}
+このとき，例えば，$p$は，
+$\text{Difficulty} \perp \text{Letter} \mid \text{Grade}$
+という関係を満たすような分布になっている．つまり，推薦状の強さは，成績を所与としたとき，授業の難易度とは独立に決まる．これは，「成績が推薦状の強さの直接の原因である」ことを表している．
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=5cm]{image/bn.png}
+\end{figure}
+\end{eg}
+
+\newpage
+\begin{itemize}
+	\item historical database interpretation
+	\begin{itemize}
+		\item 新しいDMが，自分より前のDMs達が生成した膨大なデータを元に意思決定することを考える．
+		\item 膨大なデータはtrue distribution $p$に対応．
+		\item DMは，自分のcausal modelに基づいて，各$i$について，$p_R(x_i \mid x_{R(i)})$を学ぶ．
+		\item その上で，真の分布を$p_R(x)$だと思って戦略$(p(a))_a$をとる．その結果が，$p_R \equiv p$となっている．(定常状態)
+		\item 定常状態においては，$p = p_R$が成立しており，おかしなcausality model $R$に整合的なdata(objective distrib.)が社会全体として実現してしまっている．		
+	\end{itemize}
+	\item 定常状態を考えるため，均衡概念を定義する必要．
+		\begin{itemize}
+			\item $p_R(y \mid a)$が$(p(a))_a$にも依存するため，$p_R(y \mid a)$をgivenとして好き勝手に$(p(a))_a$を動かすことはできない．
+			\item ``trembling''を用いた定義: 均衡である以上，最適でない行動と比較した結果の行動であってほしいが，他の行動と比較するためには，全ての行動$a$について，条件付期待値$p_R(y \mid a)$が定義されている必要があり，そのためには$p(a) > 0$が必要．
+		\end{itemize}
+\end{itemize}
+
+\begin{screen}
+\begin{df}[$\epsilon$-perturbed personal equilibrium]
+	Fix $R$ and $\epsilon > 0$. A distribution $p \in \Delta(X)$ \ocomment{with full support on $A$} is an $\epsilon$-perturbed personal equilibrium \\
+	$\defi$
+	$$\forall a \in A; \  p(a) > \epsilon \implies a \in \argmax_{a'} \sum_y p_R(y \mid a') u(a', y)$$
+\end{df}
+
+\begin{df}[personal eqm.]
+	$p^* \in \Delta(X)$ is a personal eqm. \\
+	$\defi$ 
+	$$
+	\exists (\epsilon_k)_k \ \exists (p_k)_k; \  \epsilon_k \to 0, \ p_k: \text{$\epsilon_k$-perturbed personal equilibrium}, p_k \to p^*
+	$$
+\end{df}
+\end{screen}
+
+\begin{prop}[Proposition 2]
+	For any DAG $R$, there exists a personal equilibrium.
+\end{prop}
+\begin{proof}
+	We show the following statement:
+	\[
+	\forall (p(y \mid a))_{y,a} \exists (p(a))_a; \ p \text{ is PE, where }
+	p(a, y) := p(y \mid a) p(a)
+	\]
+	Fix $(p(y \mid a))_{y,a}$. Define $Q^\epsilon \subseteq \Delta(A)$ as follows:
+	\[
+	Q^\epsilon := \{\pi \in \Delta(A) \subseteq R^{|A|} \mid \forall a \in A; \pi(a) \geq \epsilon \}
+	\]
+	For each $\pi \in Q^\epsilon$, define $p^\pi$, $p^\pi_R(a,y)$ as
+	\[
+	p^\pi (a,y) := \pi(a) p(y \mid a), \ p^\pi_R(a, y) := \prod_{i=1}^n p^\pi(x_i \mid x_{R(i)})
+	\]
+	Next, define a correspondence $\text{BR}: Q^\epsilon \rightrightarrows Q^\epsilon$ as follows:
+	\[
+	\text{BR}(\pi) := 
+	\argmax_{\rho \in Q^\epsilon}
+	\underbrace{
+	\sum_a \rho(a) \sum_y p_R^\pi (y \mid a) u(a, y)}_{=: h(\rho, \pi)}.
+	\]
+	
+	\begin{lem}[Kakutani's theorem]
+	Suppose the following conditions:
+	\begin{itemize}
+		\item $F: X \rightrightarrows X$ is convex-valued, nonempty-valued and has a closed graph.
+		\item $X$ is convex, compact, nonempty.
+	\end{itemize}
+	Then, there exists $x \in X$ such that $x \in F(x)$.
+	\end{lem}
+	
+	\begin{lem}[Berge's theorem]
+	\begin{itemize}
+		\item $f: X \times \Theta \to \R$: continuous.
+		\item $\Gamma: \Theta \rightrightarrows X$: compact-valued, continuous.
+		\item $v(\theta) := \max_{x \in \Gamma(\theta)} f(x, \theta)$
+		\item $x^*(\theta) := \argmax_{x \in \Gamma(\theta)} f(x, \theta)$
+	\end{itemize}
+	Then, $v$ is continuous, and $x^*$ is u.s.c.
+	\end{lem}
+	
+	\begin{lem}[Sufficient condition for the closed graph]
+		$F: X \rightrightarrows X$ has a closed graph if $F$ is closed-valued and $F$ is u.s.c.
+	\end{lem}
+
+	\paragraph{Step 1: BR has a fixed point.}
+	For sufficiently small $\epsilon > 0$, $Q^\epsilon$ is convex, compact, and nonempty.
+	$h(\rho) \equiv h(\rho, \pi)$ is linear in $\rho$; hence, $\rho$ is continuous and quasi-concave in $\rho$.
+	
+	\begin{itemize}
+		\item Since $h$ is continuous in $\rho$ and $Q^\epsilon$ is compact, $\text{BR}(\pi) \neq \emptyset$ for all $\pi \in Q^\epsilon$.
+		\item Since $h$ is continuous, $\text{BR}(\pi)$ is closed.
+		\item Since $h$ is quasi-concave, $\text{BR}(\pi)$ is convex.
+	\end{itemize}
+	Then, we need to show that $\text{BR}(\pi)$ has a closed graph. Since $\text{BR}(\pi)$ is closed-valued,  it is sufficient to show that $\text{BR}(\pi)$ is u.s.c.
+	Let $X \times \Theta := Q^\epsilon \times Q^\epsilon$ is the statement of Berge's theorem. Since $\Gamma(\theta) \equiv Q^\epsilon$ (constant), $\Gamma$ is continuous and compact. We can show that $h(\rho, \pi)$ is continuous not only in $\rho$ but also in $pi$. ($\because$ $p^\pi(a, y)$ is continuous in $\pi$, and then $p^\pi_R(a, y)$ and $p^\pi(y \mid a)$ are also continuous in $\pi$.) As $h$ is a function defined on a finite dimensional Euclidean space, $h$ is continuous in $(\rho, \pi)$. By Berge's theorem, $\text{BR}(\pi)$ is u.s.c. in $\pi$; therefore, $\text{BR}$ has a fixed point, i.e., 
+	\[
+	\exists \pi \in Q^\epsilon; \ \pi \in \text{BR}(\pi).
+	\]
+	
+	\paragraph{Step 2: $p^\pi$ is $\epsilon$-PE.}
+	Note that
+	\[
+	\pi \in
+	\argmax_{\rho \in Q^\epsilon}
+	\sum_a \rho(a) \sum_y p_R^\pi (y \mid a) u(a, y).
+	\]
+	Consider the slightly modified version of the definition of $\epsilon$-PE:
+	\begin{df}[$\epsilon$-PE ($\star$)]
+		$p \in \Delta(X)$ s.t. \ocomment{$\forall a \in A; p(a) \geq \epsilon$} is $\epsilon$-PE ($\star$) \\
+		$\defi$
+		\begin{equation}
+		\forall a \in A; \ p(a) \geq \epsilon \implies
+		a \in \argmax_{a'} \sum_y p_R(y \mid a')u(a', y) \label{pe-star}
+		\end{equation}
+	\end{df}
+	
+	\begin{lem}[The set of PEs remains the same] \label{same_lem}
+		Consider two sets of PEs: one is the set of PEs under the original definition of $\epsilon$-PE, $\mE$; the other is the set of PEs under the original definition of $\epsilon$-PE ($\star$), $\mE'$.
+		Then, $\mE = \mE'$.
+	\end{lem}
+	$\mE' \subseteq \mE$ clearly holds. Fix $p^* \in \mE$ and a corresponding sequence $(\epsilon_k, p_k)_k$. Let $\epsilon'_k := \min\{ \epsilon_k, p_k(a) \}$. Then, $p'_k \to p^*$ and $p'_k$ is $\epsilon'_k$-PE. This completes the proof of Lem.\ref{same_lem}.
+	
+	Here, we show that $p^\pi$ is a $\epsilon$-PE ($\star$). Note that $\pi$ satisfies the condition that $\pi(a) \geq \epsilon$ for all $a \in A$. Suppose toward contradiction that 
+	\[
+	\exists a \in A; \pi(a) > \epsilon, \ a \notin \argmax_{a'} 
+	\underbrace{
+	\sum_y p^\pi_R(y \mid a')u(a', y)
+	}_{=: U(a')}
+	\]
+	Pick some $a^* \in \argmax_{a'} U(a')$. (Since $A$ is finite, we can pick such $a^*$.)
+	Define $\tilde{\pi} \in Q^\epsilon$ as follows:
+	\[
+	\tilde{\pi}(a') = 
+	\begin{cases}
+		\pi(a') + \frac{\pi(a) - \epsilon}{2} & (a' = a^*) \\
+		\pi(a') - \frac{\pi(a) - \epsilon}{2} & (a' = a) \\
+		\pi(a') & \text{o.w.}
+	\end{cases}
+	\]
+	Note that $\tilde{\pi} \in Q^\epsilon$ certainly holds. It suffices to check $\tilde{\pi}(a) \geq \epsilon$:
+	\[
+	\tilde{\pi}(a) = \frac{2\pi(a) - \pi(a) + \epsilon}{2} = 
+	\frac{\pi(a) + \epsilon}{2} \geq \epsilon \quad (\because \pi \in Q^\epsilon)
+	\]
+	Observe that $\sum_a \tilde{\pi}(a)U(a) > \sum_a \pi(a)U(a)$. This contradicts $\pi \in \text{BR}(\pi)$. Therefore, $p^\pi$ is a $\epsilon$-PE ($\star$).
+	
+	\paragraph{Step 3: At least one PE $p^*$ exists.}
+	So far, we have shown that $\epsilon$-PE exists (as long as $\epsilon$ is small enough.)
+	Fix some sequence $(\epsilon^k)_k \subseteq \R$ such that $\epsilon^k \to 0$. Let $p^k$ be a $\epsilon$-PE for each $k$.
+	Note that $(p^k)_k \subseteq \Delta(X) \subseteq \R^{ |X| }$. Since $(p^k)_k$ is a sequence in a compact subset of a finite dimensional Euclidean space, $(p^k)_k$ has a convergent subsequence $(p^{k_m})_m$ such that $(p^{k_m})_m \to p^* \in \Delta(X)$. This $p^*$ is PE. 
+\end{proof}
+
+
+
+%%%
+\section{Illustrations}
+\begin{itemize}
+	\item Reverse causation: Dieter's dilemma
+	\item Coarseness I: Demand for Education
+	\item Coarseness II: Public Policy
+\end{itemize}
+
+\subsection{Reverse causation: Dieter's dilemma}
+\begin{itemize}
+	\item Three variables: $a, h, c$:
+	\begin{itemize}
+		\item DM's choice(diet or not), health outcome(good or bad), chemical level(high or low) 
+	\end{itemize}
+	\item DMは意思決定する時点では$c, h$の実現値については知らない．
+\end{itemize}
+
+
+\subsubsection{Rational DMの場合}
+\begin{itemize}
+	\item True DAG: $R^*: a \rightarrow c \leftarrow h$
+	\begin{itemize}
+		\item このとき，$p$は$p(a, h, c) = p(a)p(h)p(c \mid a,h)$を満たす．
+		\item もしDMがrational(i.e. causalityを正しく認識している)なら，彼が解く問題は，
+		$$
+		\max_{a} \sum_h \sum_c p(h)p(c \mid a,h) u(a,h,c)
+		$$
+	\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Irrational DMの場合}
+\begin{itemize}
+	\item DMのcausality modelが$R: a \rightarrow c \rightarrow h$の場合を考える．
+	\item $p$がpersonal eqm.なら，$p(a') > 0$となる$a'$は以下の式を満たす．
+	$$
+	a' \in \argmax_{a} \sum_h \sum_c p(h \mid c) p(c \mid a) u(a,h,c)
+	$$
+\end{itemize}
+
+\subsubsection{Solving for the personal eqm.}
+\begin{itemize}
+	\item $R$の下でのpersonal eqm.を求めてみる．
+	\item もう少し構造を入れて考える．
+	\begin{itemize}
+		\item $a, c, h \in \{0,1\}$
+		\item $u(a,h,c) = u(a,h) := h - \kappa a$
+		\item $p(h=1) = p(h=0) = 1/2$, $h \perp a$, $c = (1-h)(1-a)$
+	\end{itemize}
+	\item DMがrationalな場合は，$p_{R^*}(h \mid a) = p(h)$なので，常に$a^* := 0$を選択することに注意．
+\end{itemize}
+
+
+
+\begin{screen}
+\begin{prop}[personal eqm. in Dieter's dillemma]
+	In this case, there is a unique personal eqm $p$:
+	\[
+	p(a = 0) = 
+	\begin{cases}
+		0 & (\kappa \leq 1/4) \\
+		2 - \frac{1}{2 \kappa} & (\kappa \in (1/4, 1/2)) \\
+		1 & (\kappa \geq 1/2)
+	\end{cases}
+	\]
+\end{prop}
+\end{screen}
+
+\begin{proof}
+	personal eqm. $p$を任意にとり，$\beta := p(a = 0) \in [0,1]$とする．まず，$p$についてのspecificationより，
+	\[
+	p(c=0 \mid a=1) = 1, p(c=0 \mid a=0) = \frac{1}{2}, p(h=1 \mid c=1) = 0, p(h=1 \mid c=0) = \frac{1}{2 - \beta}
+	\]
+	がわかる．
+	\begin{align*}
+		p_R(h=1 \mid a=0)
+		&= p(h=1 \mid c=0)p(c=0 \mid a=0) + p(h=1 \mid c=1)p(c=1 \mid a=0) \\
+		&= \frac{1}{2 - \beta} \frac{1}{2}
+	\end{align*}
+	\begin{align*}
+		p_R(h=1 \mid a=1)
+		&= p(h=1 \mid c=0)p(c=0 \mid a=1) + p(h=1 \mid c=1)p(c=1 \mid a=1) \\
+		&= \frac{1}{2 - \beta}
+	\end{align*}
+	であり，また，$\sum_h p(h \mid a) u(a,h)$の値は，$a$の取りうる各値についてそれぞれ以下のようになる．
+	\begin{align}
+		\sum_h p_R(h \mid a' = 0) u(a' = 0, h)
+		&= p_R(h=1 \mid a'=0) \cdot 1 \nonumber \\
+		&= \frac{1}{2} \frac{1}{2 - \beta} \tag{E0} \label{0} \\
+		\sum_h p_R(h \mid a' = 1) u(a' = 1, h)
+		&= \frac{1}{2 - \beta}(1 - \kappa) + \left( 1 - \frac{1}{2 - \beta} \right) \nonumber \\
+		&= \frac{1}{2 - \beta} - \kappa \tag{E1} \label{1}
+	\end{align}
+	
+	\paragraph{Case (i): $\beta \in (0,1)$のとき}
+	$\beta > \epsilon$, $1 - \beta > \epsilon$を満たすような十分小さい$\epsilon > 0$を一つとり固定する．personal eqm.の定義より，このとき，(\ref{0}) = (\ref{1})が必要．
+	$$
+	\therefore \quad \beta = 2 - \frac{1}{2 \kappa}
+	$$
+	これがpersonal eqm.になることは，$\epsilon_k \to 0$となるような点列を任意にとり，$p_k := (\beta, 1- \beta)$とすれば，十分大きい$k$について$p_k$は$\epsilon_k$-perturbed personal eqmであり，$p_k \to p$となることよりok．
+	
+	\paragraph{Case (ii): $\beta = 0$のとき}
+	$1 - \beta > \epsilon$ となるような$\epsilon$を任意にとり固定する．このとき，(\ref{0}) $\leq$ (\ref{1})が必要．
+	(\ref{0}) $\leq$ (\ref{1}) $\equi$ $\kappa \leq 1/4$.
+	これがpersonal eqm.になることは，$\kappa \leq 1/4$のとき，$\epsilon_k \to 0$となるような点列を任意にとり，$p_k := (0, 1)$とすれば，十分大きい$k$について$p_k$は$\epsilon_k$-perturbed personal eqmであり，$p_k \to p$となることよりok．
+	
+	\paragraph{Case (iii): $\beta = 1$のとき} Case (ii)のときと同様に示せる．
+\end{proof}
+
+\paragraph{Interpretation:}
+\begin{itemize}
+	\item dietのコストが高すぎない限り，定常状態において，irrational DMは正の確率でdietをしてしまう．なぜか？
+	\item 仮にいまDMが$a=0$を選んでいたとする．このとき，DMは$c,h$の間にnegative correlationがあることに気づく．
+	\item 彼は今$a \to c \to h$だと思っているので，$a \uparrow$ $\to$ $c \downarrow$ $\to$ $h \uparrow$とできると勘違いしてしまう．
+	\item その結果，$p(a=1) > 0$となってしまう． 
+	\item $a = 1$の頻度が下がると$c,h$間の負の相関を強く認識．($p(h=1 \mid c=0) = \frac{1}{2 - \beta}$)
+\end{itemize}
+
+
+
+%%%
+\subsection{Coarseness I: Demand for Education}
+\begin{itemize}
+	\item $a, \theta, s, w$: parent's investment, child's innate ability, school performance, wage
+	\item true DAG $R^*:$
+\[
+\xymatrix{
+	a \ar[r] & s \ar[rd] & \theta \ar[l] \ar[d] \\
+	& & w
+}
+\]
+\[
+\max_a \sum_\theta p(\theta) \sum_s p(s \mid a, \theta) \sum_w p(w \mid \theta, s) u(a, w)
+\]
+
+	\item DM's subjective DAG $R:$
+\[
+\xymatrix{
+	a \ar[r] & s \ar[rd] & \theta \\
+	& & w
+}
+\]
+\[
+\max_a \sum_s p(s \mid a) \sum_w p(w \mid s) u(a, w)
+\]
+
+	\item 「目に見えない変数$\theta$の影響を無視してしまう」ような間違い．
+	\item $a \in [0,1]$, $s, \theta, w \in \{1, 0\}$
+	\item $u(a,w) := w - \kappa(a)$
+	\item $\kappa$: twice-differentiable, increasing, weakly convex. (i.e. $\kappa' > 0, \kappa''  \leq 0$), $\kappa'(0)=0, \kappa'(1) \geq 1$.
+	\item $p(s=1 \mid a, \theta) = a \theta$, $p(w=1 \mid s, \theta) = \theta \beta_s$ ($\beta_1 > \beta_0$), $p(\theta = 1) = \delta > 0$.
+\end{itemize}
+
+\subsubsection{rational DM's choice}
+\[
+\max_a \{ \delta [a \beta_1 + (1 - a) \beta_0] - \kappa(a) \}
+\]
+\begin{itemize}
+	\item $\kappa'(a^*) = \delta(\beta_1 - \beta_0)$を満たす$a^*$がoptimal.
+\end{itemize}
+
+\subsubsection{irrational DM's choice}
+\begin{screen}
+\begin{prop} \label{prop eg2}
+	In this case, the parent assigns probability one to some action $a^{**}$ such that
+	\[
+	\kappa'(a^{**}) = \delta \left[
+	\ocomment{\delta} \beta_1 - \beta_0 \cdot \frac{\delta(1 - a^{**})}{\delta(1 - a^{**}) + 1 - \delta}
+	\right]
+	\]
+	\\
+	If $\kappa'$ is either weakly convex or weakly concave, then $a^{**}$ is unique. \\
+	Note that since $\kappa'(a^{**}) < \kappa'(a^*)$, we have $a^{**} > a^*$: the parent overinvests in personal eqm.
+\end{prop}
+\end{screen}
+
+\paragraph{Interpretation:}
+\begin{itemize}
+	\item The parent overinvests because he overly estimates the positive correlation b/w $a$ and $w$:
+	\begin{itemize}
+		\item DMは$s$と$w$の間にはpure causal effectしかないと考えているが，実際は$\theta$が影響．
+		\item 投資が効くときは，$\theta$が高いときであり，そのとき，$w$は高くなりやすくなっている．(しかしそのことに気づいていない．)
+		\item[$\to$] 投資の効果を過大評価．
+	\end{itemize}
+	\item the perceived marginal benefit of investment $\kappa'(a^{**})$が，eqm. investment $a^{**}$の関数に．
+	\begin{itemize}
+		\item DMは常に$w \perp_R a \mid s$だと思っているが，実際はそうではない．
+		\item perceived causal effect of $s$ on $w$は，$a$の分布に依存する．
+		\item i.e. true DAGにconsistentな$p$について，一般には$p(w \mid s,a) \neq p(w \mid s)$
+		\item 例えば，$s = 0$を所与としたとき，$a = 1$であったとすると，そこから$\theta = 0$の確率が高いことが推測される．
+		\item $\E[w \mid s=1] - \E[w \mid s=0]$ increases in long-run investment. ($a$が大きいことをgivenにすると，$s=0$のとき，$\theta = 0$の確率が高まるので，$\E[w \mid s=0]$は$a$が低いときと比べて小さくなる．)
+		\item \ocomment{以上の議論はtrue distributionの下で考えている．personal eqm.では，true DAG, subjective DAG両方の性質が満たされることに注意．}
+	\end{itemize}
+\end{itemize}
+
+\begin{proof}[Proof of Prop.\ref{prop eg2}]
+\begin{align*}
+\sum_s p(s \mid a) \sum_w p(w \mid s) u(a, w) &= \sum_s p(s \mid a) p(w=1 \mid s) - \kappa(a) \\
+p(s=1 \mid a)
+&= \sum_\theta p(\theta) p(s=1 \mid a, \theta) = \delta a \\
+p(s=1 \mid a)
+&= \sum_\theta p(\theta) p(s=1 \mid a, \theta) = \delta a \\
+p(w=1 \mid s=1) &= \delta \beta_1 \\
+p(w=1 \mid s=0)
+&= \frac{p(w=1, s=0)}{p(s=0)}
+\end{align*}
+\begin{align*}
+p(w=1, s=0)
+&= \sum_\theta \sum_a p(w=1, s=0, a, \theta) \\
+&= \sum_\theta \int_a p(\theta) p(w=1 \mid s=0, \theta) p(s=0 \mid \theta, a) d \mu(a) \\
+&= (1 - \delta)\int_a \underbrace{p(w=1 \mid s=0, \theta=0)}_{0} p(s=0 \mid \theta=0, a) d \mu(a) \\
+&+ \delta \int_a \underbrace{p(w=1 \mid s=0, \theta=1)}_{(\beta_0)} \underbrace{p(s=0 \mid \theta=1, a)}_{(1-a)} d \mu(a) \\
+&= \delta \beta_0 \int_a (1-a)  d \mu(a)
+\end{align*}
+
+\begin{align*}
+p(s=0)
+&= \sum_\theta \sum_a p(a, s=0, \theta) \\
+&= \sum_\theta \sum_a p(\theta) p(a) p(s=0 \mid a, \theta) \\
+&= (1 - \delta) \int_a
+\underbrace{ p(s=0 \mid a, \theta=0)}_{1} d \mu(a)
++ \delta \int_a
+\underbrace{ p(s=0 \mid a, \theta=1)}_{(1 - a)} d \mu(a) \\
+&= (1 - \delta) + \delta \int_a (1 - a) d \mu(a)
+\end{align*}
+Then,
+\[
+p(w=1 \mid s=0) = \underbrace{\frac{\delta \int_a (1-a)  d \mu(a)}{(1 - \delta) + \delta \int_a (1 - a) d \mu(a)}}_{=: \gamma} \beta_0
+\]
+Note that $\gamma < \delta$. Hence,
+\[
+\sum_s p(s \mid a) p(w=1 \mid s) - \kappa(a)
+= \delta a \cdot \delta \beta_1 + (1 - \delta a) \gamma \beta_0 - \kappa(a)
+\]
+FOC is $\kappa'(a) = \delta(\delta \beta_1 - \gamma \beta_0) \ (\in (0,1))$. 
+\end{proof}
+
+
+%%%
+\subsection{Coarseness II: Public Policy}
+\begin{itemize}
+	\item $a,y,e,z$: policy, two macro variables, private sector's expectation of $y$.
+	\item true DAG $R^*:$
+\[
+\xymatrix{
+	a \ar[r] \ar[rd] & y \ar[r] & z \\
+	& e \ar[ru] & 
+}
+\]
+	\item DM's DAG $R:$
+\[
+\xymatrix{
+	a \ar[r]  & y \ar[r] & z \\
+	& e & 
+}
+\]
+\end{itemize}
+
+
+
+\newpage
+%%%
+\section{General Analysis}
+\subsection{Consequentialist Rationality}
+\begin{itemize}
+	\item personal equilibriumが最適化問題の解として記述できるための条件は？
+	\item \ocomment{(そもそもなんでこんなことを議論したいの？)}
+\end{itemize}
+
+\subsubsection{Preliminaries}
+\begin{df}[skeleton] Fix a DAG $\mG := (N,R)$.
+	The skeleton of $\mG$, $\tilde{\mG} := (N, \tilde{R})$, is an indirected version of $\mG$: formally, $\tilde{R} := \{(i, j) \in N \times N \mid (i, j) \in R, \text{ or } (j, i) \in R\}$. $(i, j) \in \tilde{R}$ is sometimes denoted by $i \tilde{R} j$, or $i - j$.
+\end{df}
+\begin{eg}[skeleton]
+	$R: i \to j \to k$, $\tilde{R}: i - j - k$.
+\end{eg}
+
+\begin{df}[clique, ancestral clique] Fix a DAG $(N, R)$.
+	$M \subseteq N$ is a clique in $R$ \\
+$\defi$
+$$
+\forall i,j \in M; \ i \neq j \implies i \tilde{R} j.
+$$
+A clique $M$ in $R$ is an ancestral clique when $\forall i \in M; \ R(i) \subseteq M$.
+\end{df}
+
+\begin{screen}
+\begin{eg}[clique]
+\begin{itemize}
+	\item $M_1 := \{5,6,7\}$: clique, but not ancestral clique.
+	\item $M_2 := \{2,4,5,7\}$: not clique.
+	\item $M_3 := \{1,3\}$: ancestral clique.
+\end{itemize}
+\end{eg}
+\begin{figure}[H]
+  \centering
+    \includegraphics[height=5cm]{image/dag.png}
+    \caption{DAG} \label{fig1}
+\end{figure}
+\end{screen}
+
+\begin{df}[equivalent] Fix $N$.
+	Two DAGs $R$ and $Q$ are equivalent, denoted as $R \sim Q$, \\
+	$\defi$
+	$$\forall p \in \Delta(X); p_R(x) = p_Q(x)$$
+	We sometimes denote the equivalence class of $R$ as $[R]$.
+\end{df}
+
+\begin{eg}[equivalent]
+	$R:1 \to 2$ and $Q:2 \to 1$ are equivalent: For any $p \in \Delta(X)$, 
+	$$p(x_1, x_2) = p(x_2 \mid x_1) p(x_1) = p(x_1 \mid x_2) p(x_2).$$
+\end{eg}
+
+\begin{df}[v-structure] The v-structure of a DAG R, $v(R)$, is defined as follows:
+	\[
+	v(R) := \{(i,j,k) \mid i \to j, j \to k, i \nrightarrow j, j \nrightarrow i \}
+	\]
+\end{df}
+\begin{eg}[v-structure]
+	Consider the DAG $R$ in Figure \ref{fig1}. $(2,5,6)$ is a v-structure of $R$; $(5,7,6)$ is not a v-structure in $R$.
+\end{eg}
+
+\begin{prop}[Verma and Pearl, 1991] \label{prop_vp}
+	$R \sim Q$ $\equi$ [$\tilde{R} = \tilde{Q}$ and $v(R) = v(Q)$].
+\end{prop}
+\begin{eg}
+	$R:1 \to 2 \to 3$ and $Q:3 \to 2 \to 1$ are equivalent: $\tilde{R} = \tilde{Q} = 1-2-3$ and $v(R) = v(Q) = \emptyset$. However, $S: 1 \to 2 \leftarrow 3 \nsim R$ because $v(S) = \{(1,2,3)\} \neq \emptyset$.
+\end{eg}
+
+\subsubsection{Consequentialist Rationality}
+\begin{itemize}
+	\item $\Delta_R(X) := \{p \in \Delta(X) \mid p \text{ is consistent with } R\}$とする．
+\end{itemize}
+\begin{screen}
+\begin{df}[Consequentialistically rational]
+	A DAG $R$ is C-rational w.r.t. true DAG $R^*$ \\
+	$\defi$
+	\[
+	\forall p, q \in \Delta_{R^*}(X);
+	\left[
+	\forall x; p(x_{-1} \mid x_1) = q(x_{-1} \mid x_1) \implies 
+	\forall x; p_R(x_{-1} \mid x_1) = q_R(x_{-1} \mid x_1)
+	\right]
+	\]
+\end{df}
+\end{screen}
+
+\begin{itemize}
+	\item $R$: C-rationalであれば，true distrib. $p$の$p(x_1)$を$p(x_{-1} \mid x_1)$を変えないようにいじっても，$p_R(x_{-1} \mid x_1)$は変化しない．
+	\item つまり，$p(x_{-1} \mid x_1)$:givenとして$p(x_1)$を最適化問題の解として選んでも$p(x_{-1} \mid x_1)$には無影響．
+\end{itemize}
+
+\begin{eg}[C-rationality in dieter's dilemma]
+	例えば$p_R(h=1 \mid a=0) = \frac{1}{2 - \beta} \frac{1}{2}$といった結果からわかるように，dieter's dilemmaにおいては，$R$はC-rationalではない:
+	いまある$p$を所与とし，$p_R( h \mid a)$の下で最適化問題を解いて$p^*(a)$を求めると，$p'(a,h,c) := p(h, c \mid a) p^*(a) \neq p(a,h,c)$であり，$p'_R(h \mid a) \neq p_R(h \mid a)$となる．
+\end{eg}
+
+\begin{itemize}
+	\item $R^*$ itself is C-rational w.r.t. $R^*$.
+	\item[$\because$)] Fix $p, q \in \Delta_{R^*}(X)$ s.t. $p(x_{-1} \mid x_1) = q(x_{-1} \mid x_1)$ for all $x$. Fix $x$.\\
+		$p_{R^*}(x) = p(x_1) p(x_{-1} \mid x_1)$. $p_{R^*}(x_1) = p(x_1) \sum_{x_{-1}} p(x_{-1} \mid x_1) = p(x_1)$. \\
+	 Then, $p_{R^*}(x_{-1} \mid x_1) = p(x_{-1} \mid x_1)$. Similarly, $q_{R^*}(x_{-1} \mid x_1) = q(x_{-1} \mid x_1)$. \qed 
+	\item From now on, assume that $R \neq R^*$.
+\end{itemize}
+
+\begin{screen}
+\begin{prop}[characterization of C-rationality (Proposition 6)] \label{prop6-1}
+	$R$ is C-rational w.r.t. $R^*$ \\
+	$\equi$
+	$$
+	\forall i > 1; \ 1 \notin R(i) \implies x_i \perp_{R^*} x_1 \mid x_{R(i)}
+	$$ 
+\end{prop}
+\end{screen}
+
+\begin{screen}
+\begin{eg}[Dieter's dilemma]
+\begin{itemize}
+	\item True DAG: $R^*: 1 \to 3 \leftarrow 2$
+	\item Subjective DAG: $R: 1 \to 2 \to 3$について考える．
+	\item $i:=3$として考える．このとき，$1 \notin R(3), x_3 \not\perp_{R^*} x_1 \mid x_2$.
+	\item よって，$R$ is not C-rational w.r.t. $R^*$.
+	\item 次に，$R':1 \to 3 \quad 2$について考えてみる．(fully coarsed/cursed)
+	\item $R'$ is C-rational w.r.t. $R^*$: $x_2 \perp_{R^*} x_1$.
+\end{itemize}
+\end{eg}
+\end{screen}
+
+\begin{itemize}
+	\item DAGのサイズが大きいと，独立性の条件を調べるのは大変
+	\item d-separationという概念を用いた効率的な判定アルゴリズムが存在．
+\end{itemize}
+
+
+\newpage
+\begin{proof}[Proof of Prop.\ref{prop6-1}]
+	\kcomment{[細部よくわからず．]}
+	\begin{align}
+		p_R(x_{-1} \mid x_1)
+		&= \frac{p_R(x_1, x_{-1})}{p_R(x_1)}
+		= \frac{p(x_1) \prod_{i \geq 2}p(x_i \mid x_{R(i)})}{\sum_{x'_{-1}} p(x_1) \prod_{i \geq 2} p(x'_i \mid x_{R(i) \cap \{1\}}, \ x'_{R(i) - \{1\}}) } \nonumber \\
+		&= \frac{ \prod_{i \geq 2}p(x_i \mid x_{R(i)})}{\sum_{x'_{-1}} \prod_{i \geq 2} p \left(x'_i \mid x_{R(i) \cap \{1\}}, \ x'_{R(i) - \{1\}} \right) }
+		\label{goal6-1}
+	\end{align}
+	今，示したいのは次のような命題であることに注意する．
+	\begin{screen}
+	\begin{align*}
+		&p(x_{-1} \mid x_1) \text{ を保ちながら$p(x_1)$を変えたときに$p_R(x_{-1} \mid x_1)$が変化しない} \\
+	\equi &\forall i > 1; \ 1 \notin R(i) \implies x_i \perp_{R^*} x_1 \mid x_{R(i)}
+	\end{align*}
+	\end{screen}
+	
+	\paragraph{$\Leftarrow)$}
+	(\ref{goal6-1})において，分母の部分は，$p(x_1)$に依存していない．よって，任意の$i \geq 2$について，
+	\begin{equation}
+		p \left(x'_i \mid x_{R(i) \cap \{1\}}, \ x'_{R(i) - \{1\}} \right) \tag{$\star$} \label{term}
+	\end{equation}
+	の部分が変化するかを見ればよい．
+	
+	$1 \in R(i)$であれば，
+	$$
+	(\text{\ref{term}}) = p \left(x'_i \mid x_1, x'_{R(i)} \right)
+	$$
+	であるので，(\ref{term})は$p(x_1)$には依存しない．(???)
+	
+	$1 \notin R(i)$の場合，仮定より，$x_i \perp_{R^*} x_1 \mid x_{R(i)}$であるので，
+	\begin{align*}
+		(\text{\ref{term}})
+		&= p \left(x'_i \mid x'_{R(i)} \right)
+		= \sum_{x''_1} p(x''_1) p(x'_i \mid x''_1, x'_{R(i)}) \\
+		&= \sum_{x''_1} p(x''_1) p(x'_i \mid x'_{R(i)}) \\
+		&= p(x'_i \mid x'_{R(i)})
+	\end{align*}
+	であるので，この場合も(\ref{term})は$p(x_1)$に依存しない．以上より，$p(x_1)$を変えても$p_R(x_{-1} \mid x_1)$が変化しないことが示された．
+	
+	\paragraph{$\Rightarrow)$}
+	$i > 1$, $1 \notin R(i)$をなる$i$を任意にとる．$1 \notin R(i)$より，
+	\[
+	(\text{\ref{term}})
+		= p \left(x'_i \mid x'_{R(i)} \right)
+		= \sum_{x''_1} p(x''_1) p(x'_i \mid x''_1, x'_{R(i)})
+	\]
+	いま，仮に$x_i \not\perp_{R^*} x_1 \mid x_{R(i)}$だとする．このとき，
+	$p(x'_i \mid x''_1, x'_{R(i)})$
+	は$x''_1$に依存して変化する．(???)
+	このとき，(\ref{term})は$p(x''_1)$に依存して変化する．よって，(?)$p_R(x_{-1} \mid x_1)$も$p(x''_1)$に依存して変化．
+\end{proof}
+
+
+
+
+%%%
+\newpage
+\subsection{Behavioral Rationality}
+\begin{screen}
+\begin{itemize}
+	\item DAG $R$がどういう性質を満たしているとき，DMはrationalな場合に最適である行動を選ぶか？ -- all payoff-relevant variables are causally linked and have no other causes.
+	\item よくある因果関係の勘違い(ここでは特に，linkを一本逆にすることを考える)がbehavioral rationalityをviolateするのはどういうときか？
+\end{itemize}
+\end{screen}
+
+\subsubsection{Preliminaries}
+\begin{df}[fully connected]
+	A directed graph $(N, R)$ is fully connected if $i \to j$ or $j \to i$ holds for all $i, j \in N$.
+\end{df}
+\begin{lem}[fully connected DAG]
+	A DAG $(N, R)$ is fully connected $\equi$ $R$ is consistent for all $p \in \Delta(X)$.
+\end{lem}
+\begin{proof}
+	Assume w.l.o.g that $\{1,2,\dots, n\}$ are topologically sorted.
+	\paragraph{$\Rightarrow)$}
+	Fix any $x$. Then, 
+	\[
+	p(x) = \prod_i p(x_i \mid x_1, \dots, x_{i-1}) = p_R(x)
+	\]
+	
+	\paragraph{$\Leftarrow)$}
+	We show contraposition. Suppose that $R$ is not fully connected. Then, since $R$ does not have enough its degree of freedom, we can construct $p$ that is not consistent with $R$. For example, consider $R: 1 \to 2 \to 3$. $R$ is not fully connected because $1 \nrightarrow 3$. Then, we can construct $p$ such that
+	\[
+	p(x) = p(x_1)p(x_2 \mid x_1) p(x_3 \mid x_2, x_1) \neq p(x_1) p(x_2 \mid x_1) p(x_3 \mid x_2) = p_R(x)
+	\]
+\end{proof}
+
+\begin{df}[$d$-separation] Let $R$ be a DAG, and $X,Y,X \subseteq N$. \\
+	A directed path $P$ is $d$-separated by $Z$ \\
+	$\defi$
+	\begin{itemize}
+		\item $P$ contains a chain $i \to m \to j$ or a fork $i \leftarrow m \to j$ such that $m \in Z$.
+		\item $P$ contains an inverted fork $i \to m \leftarrow j$ such that $m$ and the descendants of $m$ are not in $Z$.
+	\end{itemize}
+	$Z$ $d$-separates $X$ and $Y$ $\defi$ $Z$ $d$-separates every path from a node in $X$ to a node in $Y$. This is denoted by $(X \perp Y \mid Z)_R$.
+	\footnote{For a probability distribution $p$, $(X \perp Y \mid Z)_p$ denotes that $X$ and $Y$ are independent conditional on $Z$.}
+\end{df}
+
+\begin{prop}[Probabilistic Implications of $d$-Separation] \label{d-sep}
+	For any three disjoint subsets of nodes $X, Y, Z$ in a DAG $R$, and for all probability distributions $p$, 
+	\begin{enumerate}
+		\item If $p$ is consistent with $R$, then $(X \perp Y \mid Z)_R \implies (X \perp Y \mid Z)_p$
+		\item $(X \not\perp Y \mid Z)_R \implies \exists p; \ (X \not\perp Y \mid Z)_p$.
+	\end{enumerate}
+\end{prop}
+
+\subsubsection{Behavioral Rationality}
+\begin{itemize}
+	\item no restriction on $p \in \Delta(X)$, i.e., assume that true DAG $R^*$ is fully connected.
+	\item Impose some restriction on the set of possible utility functions.
+\end{itemize}
+\begin{ass}[Restriction on $u$]
+	$\exists M \subsetneq N; \ 1 \in M$, and $u$ is purely a function of $x_M$.
+\end{ass}
+
+\begin{df}[Behaviorally Rational]
+	A DAG $R$ is B-rational if in every personal eqm. $p$, \\
+	$$p(x_1) \implies x_1 \in \argmax_{x'_{1}} \sum_{x_{-1}} p(x_{-1} \mid x_1)u(x'_1, x_{-1})$$
+\end{df}
+
+\begin{prop}[Spiegler(2017), Proposition 2] \label{prop_sp2017}
+	Let $R$ be a DAG and let $C \subseteq N$.
+	\[
+	[\forall p \in \Delta(X) \forall x; p_R(x_C) = p(x_C)]
+	\equi
+	[\exists Q \in [R]; C \text{ is an ancestral clique in } Q].
+	\]
+	\ocomment{[2018/07/16: $\Leftarrow$ is correct; $\Rightarrow$ is not sure.]}
+\end{prop}
+\begin{eg}
+	$R: 1 \to 2 \leftarrow 3$. By Prop.\ref{prop_vp}, we can see that $[R] = \{R\}$. Since $\{x_2\}$ is not an ancestral clique in $R$, by Prop.\ref{prop_sp2017}, $\exists p \exists x_2; p_R(x_2) \neq p(x_2)$.
+\end{eg}
+\begin{proof}[Proof of Prop.\ref{prop_sp2017}]
+See Appendix. \ocomment{よくわからず．}	
+\end{proof}
+
+
+
+%%%
+\newpage
+\begin{screen}
+\begin{prop}
+The DM is behaviorally rational $\equi$ $\exists Q \in [R];$ $M$ is an ancestral clique in $Q$.
+\end{prop}
+\end{screen}
+
+
+\begin{proof}
+	\ocomment{[Prop.\ref{prop_sp2017}を修正しない限り，$\Rightarrow$は不成立．]} \\
+	Note that, by assumption, node $1$ is an ancestral node in both $R$ and $R^*$.
+	
+	\paragraph{$\Leftarrow)$}
+	Assume that there exists $Q \in [R]$ such that $M$ is an ancestral clique in $Q$.
+	By Prop.(\ref{prop_sp2017}), $p_R(x_M) = p(x_M)$.
+	Fix any personal eqm. $p$. We need to show that $p$ satisfies the following:
+	\[
+	\forall x_1; \ p(x_1) > 0 \implies x_1 \in \argmax_{x'_1} \sum_{x_{-1}} p(x_{-1} \mid x'_1) u(x).
+	\]
+	Fix $x_1$ such that $p(x_1) > 0$. Since $u$ depends only on $x_M$,
+	\begin{align*}
+		\argmax_{x'_1} \sum_{x_{-1}} p(x_{-1} \mid x'_1) u(x)
+	&= \argmax_{x'_1} \sum_{x_{M - \{1\}}} p(x_{M - \{1\}} \mid x'_1) u(x_M) \\
+	&= \argmax_{x'_1} \sum_{x_{M - \{1\}}} p_R(x_{M - \{1\}} \mid x'_1) u(x_M) \ (\because p_R(x_M) = p(x_M)) \\
+	&= \argmax_{x'_1} \sum_{x_{-1}} p_R(x_{-1} \mid x'_1) u(x)
+	\end{align*}
+	
+	Since $p$ is personal eqm., $x_1 \in \argmax_{x'_1} \sum_{x_{-1}} p_R(x_{-1} \mid x'_1) u(x)$. 
+	Therefore, $R$ is B-rational.
+	
+	\paragraph{$\Rightarrow)$}
+	Assume that $R$ is B-rational.
+	By Prop.(\ref{prop_sp2017}), we have $p_R(x_1) = p(x_1)$. Then,
+	\[
+	p_R(x_{M - \{1\}} \mid x_1) = \frac{p_R(x_M)}{p_R(x_1)} = \frac{p_R(x_M)}{p(x_1)}, \quad
+	p(x_{M - \{1\}} \mid x_1) = \frac{p(x_M)}{p(x_1)}.
+	\]
+	Hence, 
+	$
+	p_R(x_{M - \{1\}} \mid x_1) = p(x_{M - \{1\}} \mid x_1)
+	$ holds
+	if and only if $p_R(x_M) = p(x_M)$ holds.
+	
+	\ocomment{By Prop.(\ref{prop_sp2017})[要修正],} it is sufficient to show that $p(x_M) \equiv p_R(x_M)$; it suffices to show that 
+	$p_R(x_{M - \{1\}} \mid x_1) = p(x_{M - \{1\}} \mid x_1)$.
+	Suppose toward contradiction that $p_R(x_{M - \{1\}} \mid x_1) \neq p(x_{M - \{1\}} \mid x_1)$. Then,
+	we can construct the utility function $u$ under which DM does not choose the optimal action w.r.t. $p$. (??)
+\end{proof}
+
+\paragraph{Interpretation:}
+\begin{itemize}
+	\item (1) all payoff-relevant variables are causally linked, (2) they have no other causes のときに，DMはrationalな場合の最適行動を選択できる．
+	\item ((1),(2)のどちらかが満たされなければ，ある$p$と$u$の下でsuboptimalな行動をしてしまう．\ocomment{[要修正]})
+	\item 「簡単なoperationがbehavioral rationalityを損なうか否か」みたいな議論も面白いかも？
+\end{itemize}
+
+\begin{prop}[Proposition 9] \label{one-link}
+	Suppose that $R$ departs from $R^*$, which is fully connected, by omitting one link $i \to j$. Then, \\
+	$$
+	\text{DM is B-rational.} \equi j=n, \ i \neq 1. 
+	$$
+\end{prop}
+\begin{eg}
+	\begin{itemize}
+		\item $R: 1 \to 3 \leftarrow 2$. $1 \to 2$ omitted from $R^*$. DM is not B-rational. -- double-counting.
+		\item $R: 1 \to 2 \to 3$. $1 \to 3$ omitted from $R^*$. DM is not B-rational.
+		-- failed to perceive any effect of $x_1$
+		\item $R: 2 \leftarrow 1 \to 3$. $2 \to 3$ omitted from $R^*$. DM is B-rational.
+		-- not distinguish direct and indirect effect.
+	\end{itemize}
+\end{eg}
+
+
+
+%%%
+\newpage
+\subsection{Payoff ranking of DAGs}
+\begin{screen}
+	\begin{itemize}
+	\item 矢印を一本増やす $\approx$ より賢くなる
+	\item より賢いDAGを持つ人は，常に良い利得を達成できるか？ -- No
+	\end{itemize}
+\end{screen}
+
+\begin{eg}
+	\begin{itemize}
+		\item $R$: fully connected DAG, $1 \to 2 \to 3 \to 4$; $u$ is purely a function of $x_1$ and $x_4$.
+		\item $R'$: $2 \to 3$ removed from $R$
+		\item By Prop.\ref{one-link}, $R'$ is not B-rational: $R'$ is weakly dominated by $R$ in terms of expected performance.
+		\item $R''$: $2 \to 4$ removed from $R'$.
+	\end{itemize}
+	\[
+	R'': \xymatrix{
+		1 \ar[r] \ar[d] \ar[rd] & 2 \ar[ld]  \\
+		3 \ar[r] & 4
+	}, \quad
+	Q: \xymatrix{
+		1 \ar[r] \ar[d] \ar[rd] & 2   \\
+		3 \ar[ru] & 4 \ar[l]
+	}
+	\]
+	\begin{itemize}
+		\item $Q \sim R''$ (the same skeleton and v-structure). $\{1,4\}$ is an ancestral clique in $Q$.
+		\item $R''$ is B-rational w.r.t. $R^*$; $R'$ is weakly dominated by $R''$.
+	\end{itemize}
+\end{eg}
+
+\begin{ass}[For simplicity?]
+	$1$ is an isolated node in all relevant true and subjective DAGs.
+\end{ass}
+
+\begin{df}[Ranking of DAGs]
+	$R$ is more rational than $R'$ \\
+	$\defi$ $\forall p, u, a, a';$
+	\begin{align}
+		\sum_y p_R(y) u(a, y) &> \sum_y p_R(y) u(a', y), \label{cond1} \\
+		\sum_y p_{R'}(y) u(a', y) &> \sum_y p_{R'}(y) u(a, y) \label{cond2} \\
+		\implies \sum_y p(y) u(a, y) &> \sum_y p(y) u(a', y)
+	\end{align}
+\end{df}
+\begin{itemize}
+	\item 「2つのDAGで意見が割れたときは，常に片方が正しい」
+	\item $R$: fully connected, $R'$: not fully connectedのときは正しい．
+\end{itemize}
+
+\begin{screen}
+\begin{prop}[Proposition 10]
+	Suppose both $R$ and $R'$ are not fully connected. Then, neither DAG is more rational than the other.
+\end{prop}
+\end{screen}
+
+\begin{proof}
+	Assume that both $R$ and $R'$ are not fully connected.
+	If $R \sim R'$, the claim holds. Assume $R \nsim R'$.
+	
+	Suppose toward contradiction that $R$ is more rational than $R'$.
+	Fix any $p \in \Delta(X)$. Let $q := (p_R(y))_y$ and $r:=(p_R(y))_y$. Note that $q$ and $r$ are $k:=|Y|$-length probability vectors.
+	Fix any $u,a,a'$. Let $z^y := u(a, y) - u(a', y)$, $z := (z^y)_y$, and 
+	$D:= [
+	\begin{matrix}
+		q & -r & -p
+	\end{matrix}
+	]
+	$. Note that $D$ is a $k \times 3$ matrix. Fix any $\epsilon > 0$. Let $b := (\epsilon, \epsilon, \epsilon)^\top$.
+	
+	First, we show the following:
+	\begin{equation}
+		\nexists z \in \R^k; \ D^\top z > b \label{lem1_prop10}
+	\end{equation}
+	Suppose not. Then there exists $z \in \R^k$ such that
+	\[
+	D^\top z =
+	\left[
+	\begin{matrix}
+		q^\top z \\
+		-r^\top z \\
+		-p^\top z
+	\end{matrix}
+	\right]
+	= 
+	\left[
+	\begin{matrix}
+	\sum_y p_R(y)(u(a, y) - u(a', y)) \\
+	- \sum_y p_{R'}(y)(u(a, y) - u(a', y)) \\
+	- \sum_y p(y)(u(a, y) - u(a', y))
+	\end{matrix}
+	\right]
+	> b
+	\]
+	This implies
+	\begin{align*}
+		\sum_y p_R(y)u(a, y) &> \sum_y p_R(y)u(a', y) \\
+		\sum_y p_{R'}(y)u(a', y) &> \sum_y p_{R'}(y)u(a, y) \\
+		\sum_y p(y)u(a', y) &> \sum_y p(y)u(a, y)
+	\end{align*}
+	This contradicts the assumption that $R$ is more rational than $R'$. Therefore, (\ref{lem1_prop10}) must hold.
+	
+	Next, we apply Gale's theorem:
+	\begin{screen}
+	\begin{lem}[Gale's Theorem]
+		Let $A \in \R^{M \times N}$ and $b \in \R^N$. The following two statements are equivalent:
+		\begin{enumerate}
+			\item $\exists x \in \R^M; \ A^\top x \leq b$
+			\item $\forall y \in \R^N; \ y \geq 0, Ay=0 \implies b^\top y \geq 0$
+		\end{enumerate}
+	\end{lem}	
+	\end{screen}
+	By (\ref{lem1_prop10}) and Gale's theorem, we have
+	\[
+	\exists w \in \R^3; \ w \geq 0, Dw = 0, b^\top w < 0
+	\]
+	\ocomment{[Spiegler(2016)では$w > 0$になっているがなぜ？]}
+	
+	Since $b^\top w < 0$, there exists $j \in \{1,2,3\}$ such that $w_j$ > 0.
+	Since $Dw=0$, for all $i \in [k]$, $w_1 q^i = w_2 r^i + w_3 p^i$, or
+	\[
+	w_1 p_R(y) = w_2 p_{R'}(y) + w_3 p(y)
+	\]
+	 By summing up w.r.t. $i$, we have $w_1 = w_2 + w_3$. Hence, 
+	\[
+	w_1 > 0, (w_2 > 0 \text{ or } w_3 > 0)
+	\]
+	Since $w_1>0$, for all $y$,
+	\[
+	p_R(y) = \frac{w_2}{w_1}p_{R'}(y) + \frac{w_3}{w_1}p(y)
+	\]
+	Let $\alpha := w_2 / w_1$ and $\beta := w_3 / w_1$. Then, by summing up w.r.t. $y$, we have $\alpha + \beta = 1$. Therefore, we have the following:
+	\begin{equation}
+		\forall p \ \exists \alpha \in [0,1]; p_R = \alpha p + (1 - \alpha)p_{R'} \label{lem2_prop10}
+	\end{equation}
+	
+	In case $\alpha < 1$, the proof is done: If $p$ is consistent with $R$, or $p_R = p$, by (\ref{lem2_prop10}), we have $p_R = p_{R'}$, and then $p = p_{R'}$; Similarly, if $p$ is consistent with $R'$, then $p$ is also consistent with $R$: we have the following relationship:
+	\[
+	p = p_R \equi p = p_{R'} 
+	\]
+	In addition, for any $p \in \Delta(X)$, $p_R$ is consistent with $R$.
+	Replace $p$ with $p_R$ and apply the procedure to $p_R$; we have
+	$p_R = \alpha p_R + (1 - \alpha) p_{R'}$, and then $p_R = p_{R'}$.
+	
+	\kcomment{[$\alpha < 1$ for all $p$, or, $w>0$が言えればokだが・・・？, fully-connectedの条件を用いていない．]
+	}
+
+\end{proof}
+
+
+%%%
+\newpage
+\section{Variations and Relations to Other Concepts}
+\subsection{Variations}
+\begin{itemize}
+	\item 複数のDAGを確率的に持つ(Partial cursedness)
+	\item 社会に，異なるDAGを持つ主体が混在している．(e.g. Dieters' dilemma)
+\end{itemize}
+
+\subsection{Relations to Other Concepts}
+\begin{itemize}
+	\item Jehiel (2005) Analogy-based expectations
+	\item Esponda (2008) Naive Behavioral Equilibrium
+	\item Eyster and Rabin (2005) Partial cursedness
+	\item Osborne and Rubinstein (1998) S(K) equilibrium
+\end{itemize}
+
+
+%%%
+\section{Concluding Remarks}
+\subsection{Alternative interpretations of DAG}
+\begin{itemize}
+	\item Data limitations (cf: Spiegler (2017) Data Monkeys)
+	\item Limited ability to ask the right questions
+\end{itemize}
+
+
+%%%
+\newpage
+\section{Appendix}
+\begin{proof}[Proof of Prop.\ref{prop_sp2017}]
+	\ocomment{[There is an error in the proof in Spiegler(2017).]}
+	
+	If $C$ is empty, the proposition clearly holds; from now on, we assume  $C \neq \emptyset$.
+	 
+	First, note that for any DAG $R$, the following holds:
+	\begin{align}
+		p_R(x_C) &= \sum_{x'_{N-C}} p_R(x_C, x'_{N-C}) \nonumber \\
+		&=  \sum_{x_{N-C}}
+		\prod_{i \in C} p(x_i \mid x_{R(i) \cap C}, x'_{R(i) - C})
+		\prod_{i \notin C} p(x'_i \mid x_{R(i) \cap C}, x'_{R(i) - C}) \label{eq1}
+	\end{align}
+	
+	\paragraph{$\Leftarrow)$}
+	Fix $C$ such that $C$ is an ancestral clique in some $Q \in [R]$. Note that $R(i) - C = \emptyset$ for all $i \in C$. Then,
+	\[
+	\prod_{i \in C} p(x_i \mid x_{R(i) \cap C}, x'_{R(i) - C})
+	= \prod_{i \in C} p(x_i \mid x_{R(i) \cap C})
+	= p(x_C) \ (\because \text{topological sort})
+	\]
+	Hence, by (\ref{eq1}),
+	\[
+	p_R(x_C) = p_Q(x_C) = p(x_C)
+	\underbrace{\sum_{x_{N-C}}
+		\prod_{i \notin C} p(x'_i \mid x_{R(i) \cap C}, x'_{R(i) - C})}_{1} = p(x_C).
+	\]
+	
+	\begin{screen}
+	\begin{eg}
+		For example, consider the following DAG:
+		\[
+		\xymatrix{
+			1 \ar[r] & 2 \ar[rd] & 4 \\
+			& & 3
+		}
+		\]
+		Let $C:=\{1,2\}$. Then,
+		\[
+		p_R(x_1, x_2) = 
+		\sum_{x'_3, x'_4} p_R(x_1, x_2, x'_3, x'_4)
+		= p(x_1, x_2) \sum_{x'_3, x'_4} p(x'_4) p(x'_3 \mid x_2)
+		= p(x_1, x_2)
+		\]
+	\end{eg}
+	\end{screen}
+	
+	\paragraph{$\Rightarrow)$}
+	\ocomment{[We need to make some fix in this direction.]}
+	
+	We show contrapositive: we show the following:
+	\[
+	[\forall Q \in [R]; \ C \text{ is not an ancestral clique in } Q]
+	\implies
+	[\exists p  \exists x; \ p_R(x_C) = p(x_C)]
+	\]
+	Assume that $C$ is not an ancestral clique in any $Q \in [R]$.
+	Fix any $Q \in [R]$.
+	We divide the proof into two cases:
+	\paragraph{Case (i): In case $C$ is not a clique in $Q$.}
+	In this case, $C$ is not a clique in any $R' \in [R]$. There must be two distinct nodes $i_0, i_1 \in C$ such that $(i_0, i_1) \notin Q$ and $(i_1, i_0) \notin Q$. Consider $p \in \Delta(X)$ such that for every $i \in C \setminus \{i_0, i_1\}$, $x_i$ is independently distributed, whereas $x_{i_0}$ and $x_{i_1}$ are mutually correlated. Then,
+	\[
+	\prod_{i \in C} p(x_i \mid x_{R(i) \cap C}, x'_{R(i) - C})
+	= \prod_{i \in C}p(x_i) \ (\because \text{there is no edge b/w $i_0$ and $i_1$})
+	\]
+	\[
+	\prod_{i \notin C} p(x'_i \mid x_{R(i) \cap C}, x'_{R(i) - C})
+	= \prod_{i \notin C}p(x'_i)
+	\]
+	\[
+	p_R(x_C) = (\text{\ref{eq1}}) =  \prod_{i \in C}p(x_i) \sum_{i \notin C} \prod_{i \notin C}p(x'_i) = \prod_{i \in C}p(x_i)
+	\]
+	However, 
+	\[
+	p(x_C) = p(x_{i_0}) p(x_{i_1} \mid x_{i_0}) \prod_{i \in C \setminus \{i_0, i_1\}} p(x_i) 
+	\]
+	Therefore, for some $p$, $p_R(x_C) \neq p(x_C)$.
+	
+	\paragraph{Case (ii): $C$ is a clique, but not an ancestral clique in $Q$.}
+	For a DAG $R$, denote the set of the all v-structures in $R$ as $v(R)$, i.e., 
+	\[
+	v(R) := \{(i,j,k) \mid i \to j, k \to j, i \nrightarrow k, k \nrightarrow i \}
+	\]
+	
+	In the original proof, there is a lemma like the following, but the lemma is wrong:
+	
+	\begin{screen}
+	\begin{lem} \label{wrong_lem}
+	Let $R$ be a DAG and $C$ be a clique in $R$. Assume the following two:
+		\begin{enumerate}
+			\item $\forall j \in C$; $j$ has no unmarried parents in $R$.
+			\item $\forall i \notin C$; if there is a directed path from $i$ to some node $j \in C$ in $R$, then $i$ has no unmarried parents in $R$.
+		\end{enumerate}
+		Transform $R$ into another DAG $R'$ by inverting every link along every such path; $R$ and $R'$ has the same v-structure.
+	\end{lem}
+	\end{screen}
+	
+	\begin{screen}
+	\begin{eg}[Counter example for Lem.\ref{wrong_lem}]
+		Let $R$ be the graph below:
+		\[
+		\xymatrix{
+			  & j_1 \ar[r] & j_2 \ar[rd]  &  \\
+			  & & & c_j \ar[dd] \ar[llddd] \ar[lddd] \\
+			i \ar[ruu] \ar[rruu] \ar[rrru] \ar[rdd] & & & \\
+			& & & c_k\\
+			& k_1 \ar[r] & k_2 \ar[ru] & 
+		}
+		\]
+		Let $C := \{c_j, c_k\}$. Note that for all $k \in N \setminus C$ such that $k$ has a path to some $c \in C$, $k$ has no unmarried parents. $R'$ is as follows:
+		\[
+		\xymatrix{
+			  & j_1 \ar[ldd] & j_2 \ar[l] \ar[lldd] &  \\
+			  & & & c_j \ar[dd] \ar[llddd] \ar[lddd] \ar[llld] \ar[lu] \\
+			i  & & & \\
+			& & & c_k \ar[ld] \\
+			& k_1 \ar[luu] & k_2 \ar[l] & 
+		}
+		\]
+		Though $v(R) = \emptyset$, we have $v(R') = \{(j_1, i, k_1), (j_1, i, c_j), (j_2, i, k_1)\}$. Therefore, Lem.\ref{wrong_lem} does not hold.
+	\end{eg}
+	\end{screen}
+	
+	We can consider the modified version of the above lemma:
+	\begin{screen}
+	\begin{lem} \label{modefied_lem}
+	Let $R$ be a DAG and $C$ be a clique in $R$. Assume the following two:
+		\begin{enumerate}
+			\item $\forall j \in C$; $j$ has no unmarried parents in $R$.
+			\ocomment{
+%			\item $\forall i, j \notin C$; if there is a directed path from $i$ to some node $j_i \in C$ and a path from $j$ to some node $j_k \in C$ in $R$, then $i \to j$ or $j \to i$.}
+			\item $\forall i, j \in N$; if there is a directed path from $i$ to some node $c_i \in C$ and a path from $j$ to some node $c_j \in C$ in $R$, then $i \to j$ or $j \to i$.}
+		\end{enumerate}
+		Transform $R$ into another DAG $R'$ by inverting every link along the every path $i \rightsquigarrow c$ such that $i \notin C$ and $c \in C$; then, $R$ and $R'$ has the same v-structure.
+	\end{lem}
+	\end{screen}
+	For the moment, let us admit Lem.\ref{modefied_lem}. (I prove it later.)
+	
+	\kcomment{[I tried to modified the condition in assumption 2 from $\forall i, j \in N$ to $\forall i,j \notin C$, but this does not hold: Below, $(i,j,k) \in v(R)$, but $(i,j,k) \notin v(R')$]
+	\[
+	R:
+	\xymatrix{
+		  i \ar[rd] & \\
+		  & j \ar[d] & \\
+		  k \in C \ar[r] \ar[ru] & c_j \in C
+	}
+	R':
+	\xymatrix{
+		  i  & \\
+		  & j \ar[lu] & \\
+		  k \in C \ar[r] \ar[ru] & c_j \in C \ar[u]
+	}
+	\]
+	}
+	
+	
+	\paragraph{The modified proof for Case (ii)}
+	By Lem.\ref{modefied_lem}, if the two assumptions in Lem.\ref{modefied_lem} hold, there should exists $R' \in [R]$ such that $C$ is an ancestral clique in $R'$; this contradicts the assumption we made at the beginning of the proof.
+	
+	Hence, one of the following propositions holds:
+	\begin{align}
+		&\exists j \in C; \ j \text{ has an unmarried parents in } Q. \tag{P1} \label{p1}\\
+		&\exists i, j \in N \ \exists c_i, c_j \in C; \ i \rightsquigarrow_Q c_i, j \rightsquigarrow_Q c_j, i \nrightarrow_Q j, j \nrightarrow_Q i \tag{P2} \label{p2}
+	\end{align}
+	In case of (\ref{p1}), the original proof works. From now on, we assume (\ref{p1}) does not hold and (\ref{p2}) holds.
+	
+	First of all, $i \notin C$ or $j \notin C$; otherwise there is an edge between them because $C$ is a clique. Assume w.l.o.g. that $i \notin C$; $Q$ contains the structure as below:
+	\[
+	\xymatrix{
+		  i \ar@{~>}[r] & c_i \in C\\
+		  j \ar@{~>}[r] & c_j \in C \ar@{-}[u]
+	}
+	\]
+	Let $P_i \subseteq N$ and $P_j \subseteq N$ are the set of nodes contained in the directed paths from $i$ to $c_i$ and from $j$ to $c_j$ respectively.
+	
+	\begin{screen}
+		\paragraph{Observations:}
+	\begin{itemize}
+		\item $|P_i| \geq 2$. ($\because \ i \notin C$.)
+		\item $|P_j| \geq 1$. ($j$ may be a member of $C$.)
+		\item $c_i$ and $c_j$ may coincide.
+		\item If $|P_j|=1$, then $j \neq c_i$; otherwise, $i \to j$.
+	\end{itemize}
+	\end{screen}
+	
+	Consider $p \in \Delta(X)$ and a DAG $R^*$ that satisfy
+	\begin{itemize}
+		\item $p$ is consistent with $R^*$.
+		\item $i \notin P_i \cup P_j \implies i \text{ is an isolated node in $R^*$.}$
+	\end{itemize}
+	Consider the subgraph of $Q$ restricted on $P_i \cup P_j$. We name the subgraph $Q'$. 
+	
+	
+	
+	\paragraph{Case (ii-1): In case $Q'(j) = \emptyset$:}
+	Since $C$ is a nonempty clique, $j \notin C$. Since $i \nleftrightarrow j$, for all $p \in \Delta(X)$, we have $i \not\perp_{p_Q'} j$. Consider $p \in \Delta(X)$ such that $i \perp_{p} j$. \ocomment{Then, we can apply the same logic in the original proof in this case; we can show the existence of $p$ such that $p(x_C) \neq p_Q(x_C)$ for some $x_C$.}
+	
+	\paragraph{Case (ii-2): In case $Q'(j) \neq \emptyset$:}
+	Fix $k \in Q'(j)$. Since $Q'$ is a DAG, $k$ is not a descendant of $j$ in $Q'$. We also have $k \neq i$. Since all the nodes in $Q'$ is either the descendant of node $i$ or that of node $j$, node $k$ is a descendant of node $i$. Assume w.l.o.g that there is no node along the path from $i$ to $k$ such that the node is a parent of $j$. (If $|Q'(j)| \geq 2$, then we can take the node $k$ that is closest to $i$.)
+	
+	\paragraph{$(i \perp j \mid k)_{Q'}$ holds:} $\because)$
+	First, take any path $i \rightsquigarrow j$, by the construction of $k$, $k$ is on that path. Next, we need to check that neither of the following structure is contained in $Q'$:
+	\begin{enumerate}
+		\item $i \to k \leftarrow j$
+		\item $\xymatrix{
+		i \ar[rd] & \\
+		& m \ar@{~>}[r]& k \\
+		j \ar[ru] & 
+		}$
+	\end{enumerate}
+	However, since $Q'$ is a DAG and $k \to_{Q'} j$, neither of them holds.
+	
+	\paragraph{cont.}
+	Therefore, there exists $p' \in \Delta(X_{P_i \cup P_j})$ such that 
+	$(x_i \not\perp x_j \mid x_k)_{p'}$.
+	Consider the following probability distribution $p$:
+	\[
+	p(x) := p'(x_{P_i \cup P_j}) \prod_{l \notin P_i \cup P_j} p(x_l)
+	\]
+	\ocomment{
+	$p_R$ should satisfy $(x_i \perp x_j \mid x_k)_{Q}$. This implies
+	\[
+	\exists p \exists x_C; \ p(x_C) = p_{Q'}(x_C)
+	\]
+	}
+\end{proof}
+
+もしかしたら，Spieglerが論文中でいっている主張はLem.\ref{wrong_lem}とは違うものかも．
+\begin{screen}
+	\begin{lem} \label{spiegler_lem}
+	Let $R$ be a DAG and \ocomment{$C$ be a non-ancestral clique in any $R' \in [R]$.} Assume the following two:
+		\begin{enumerate}
+			\item $\forall j \in C$; $j$ has no unmarried parents in $R$.
+			\item $\forall i \notin C$; if there is a directed path from $i$ to some node $j \in C$ in $R$, then $i$ has no unmarried parents in $R$.
+		\end{enumerate}
+		Transform $R$ into another DAG $R'$ by inverting every link along every such path; $R$ and $R'$ has the same v-structure.
+	\end{lem}
+\end{screen}
+しかし，この証明の仕方もよくわからず．
+
+%%%
+\newpage
+\begin{proof}[Proof of Lem.\ref{modefied_lem}]
+	We show $v(R) = v(R')$.
+	
+	\paragraph{Step 1: $v(R) \subseteq v(R')$}
+	Fix any v-structure $(i,j,k) \in v(R)$, $i \to j \leftarrow k$.
+	By assumption 1 in Lem.\ref{modefied_lem}, we can assume that $j \notin C$.
+	We can also assume that $i \notin C$ or $k \notin C$; otherwise there is an edge between $i$ and $k$ because $C$ is a clique. Assume w.l.o.g that $i \notin C$.
+	
+	It is sufficient to show that $(i,j,k)$ remains as a v-structure after the inversion. 
+	%$\xymatrix{i \ar@{~>}[r]& j}$ denotes that there is a directed path from node $i$ to node $j$.
+	Suppose toward contradiction that $(i,j,k)$ is not a v-structure any more after the inversion. It is necessary that at least one of the edges $i \to j$ and $k \to j$ should be inverted.
+	\paragraph{Case (1-1): In case $k \notin C$:}
+	Assume w.l.o.g that $i \to j$ is inverted. Then, there exists some node $c \in C$ such that 
+	$
+	\xymatrix{i \ar@{~>}[r]_R& c}
+	$
+	\footnote{
+	\xymatrix{i \ar@{~>}[r]_R& j} denotes that there is a directed path from node $i$ to node $j$ in a DAG $R$.
+	}
+	; this implies that 
+	$
+	\xymatrix{i \ar@{~>}[r]_R& c}
+	$
+	, and
+	$
+	\xymatrix{k \ar@{~>}[r]_R& c}
+	$
+	. The graph below summarizes the relationships:
+	\[
+	\xymatrix{
+		  i \ar[rd] & \\
+		  & j \ar@{~>}[r] & c \in C\\
+		  k \ar[ru] &
+	}
+	\]
+	However, by assumption 2 in Lem.\ref{modefied_lem}, there should be an edge  between node $i$ and node $k$; this contradicts the assumption that $(i,j,k)$ is a v-structure in $R$.
+	
+	\paragraph{Case (1-2) In case $k \in C$:}
+	In this case, $k \to j$ is not inverted; then, $i \to j$ should be inverted. Then, by the same logic as in Case (1-1), this leads to a contradiction.
+	
+	\paragraph{Step 2: $v(R) \supseteq v(R')$}
+	We show that the inversion does not create a new v-structure.
+	Suppose toward contradiction that there exists a triple $(i,j,k) \in v(R) \setminus v(R')$. In this case, the structure as in the below graph should hold in $R$ ($c_i$ and $c_k$ may be the same node.):
+	\[
+	\xymatrix{
+		    & i \ar@{~>}[r] & c_i \in C\\
+		  j \ar[ru] \ar[rd] &   &\\
+		    & k \ar@{~>}[r] & c_k \in C
+	}
+	\]
+	However, by assumption 2 in Lem.\ref{modefied_lem}, there should be an edge  between node $i$ and node $k$. A contradiction.
+\end{proof}
+
+
+
+
+
+\end{document}
