@@ -9,12 +9,14 @@ Study Notes on Economics
 ## To Do
 - [Jullien, Pavan (REStud, forthcoming), Information Management and Pricing in Platform Markets](https://academic.oup.com/restud/advance-article-abstract/doi/10.1093/restud/rdy040/5062616?redirectedFrom=fulltext)
 
-** 2018-08 **
+## Done
+
+**2018-08**
 - [Jon Kleinberg, Robert Kleinberg (2018, EC18), Delegated Search Approximates Efficient Search](https://dl.acm.org/citation.cfm?id=3219205)
   - By change of variables, delegation problems can be reduced to online decision making problem.
   - Prophet Inequalities can give the lower bound of principal's payoff in the simple mechanism.
 
-** 2018-07 **
+**2018-07**
 - [Spiegler (2016), Bayesian Networks and Boundedly Rational Expectations](https://academic.oup.com/qje/article-abstract/131/3/1243/2461139?redirectedFrom=PDF)
 
 - [Spiegler (2017), “Data Monkeys”: A Procedural Model of Extrapolation from Partial Statistics](https://academic.oup.com/restud/article-abstract/84/4/1818/2929388)
