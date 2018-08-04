@@ -6,6 +6,8 @@ Study Notes on Economics
 
 - [Keller, Rady, Cripps (2004, ECMA), Strategic Experimentation with Exponential Bandits](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1468-0262.2005.00564.x)
 
+- Valimaki (2018), Notes on Mechanism Design
+
 ## To Do
 - [Jullien, Pavan (REStud, forthcoming), Information Management and Pricing in Platform Markets](https://academic.oup.com/restud/advance-article-abstract/doi/10.1093/restud/rdy040/5062616?redirectedFrom=fulltext)
 
