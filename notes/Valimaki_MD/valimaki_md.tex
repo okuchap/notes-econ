@@ -119,6 +119,7 @@ numbersep=1zw,%行番号と本文の間隔。
 	\item This study notes are mainly based on the lecture note written by Valimaki in 2018.
 \end{itemize}
 
+%%%
 \section{Single Agent}
 \begin{itemize}
 	\item One principal v.s. one agent.
@@ -129,6 +130,7 @@ numbersep=1zw,%行番号と本文の間隔。
 	\item As for implementability, we can discuss it focusing only on direct mechanisms, $(\Theta, \phi)$, w.l.o.g. (Revelation principle)
 \end{itemize}
 
+%%%
 \subsection{Revenue Equivalence}
 \subsubsection{Milgrom and Segal (2002), Envelope Theorem}
 \begin{itemize}
@@ -200,6 +202,8 @@ numbersep=1zw,%行番号と本文の間隔。
 	Note that by assumption $f(x, \cdot)$ is differentiable at all $\theta \in \Theta$. Therefore, if $V$ is differentiable at $\theta$, we have $V'(\theta) = f_\theta(x^*(\theta), \theta)$.
 \end{proof}
 
+
+%%%
 \subsubsection{RET}
 \begin{itemize}
 	\item Focus on the agent's utility: $u := u^A$.
@@ -234,13 +238,20 @@ numbersep=1zw,%行番号と本文の間隔。
 	\item RET states that under any IC mechanism, except for the constant $V(\underline{\theta})$, the transfer from the agent to the principal is uniquely determined once the allocation rule $x$ is fixed.
 \end{itemize}
 
+
+%%%
 \subsection{Characterization of IC}
 \subsubsection{Monotone Comparative Statics}
+This subsection is based on the lecture slides by John K.-H. Quah:
+
+\url{http://www.johnquah.com/lecture-slides.html}
+
 \begin{itemize}
-	\item Consider parameterized optimization problem.
+	\item Consider parameterized optimization problems.
 	\item We often want to know how optimizers and optimal values change according to the changes in parameters.
-	\item Implicit function theorem: many assumptions are required.
-	\item Monotone comparative analysis = Sensitivity analysis
+	\item comparative statics = Sensitivity analysis
+	\item Implicit function theorem: Not only the direction of changes but also the rate of change. Many assumptions are required.
+	\item Monotone comparative statics: Only the direction of changes. Fewer assumptions.
 	\item $\Theta \subseteq \R$. Two functions $g: \Theta \to \R$ and $f: \Theta \to \R$.
 \end{itemize}
 
@@ -264,6 +275,13 @@ numbersep=1zw,%行番号と本文の間隔。
 	\forall \theta'' > \theta' ; \ f(\cdot, \theta'') \succsim_{IN} f(\cdot, \theta')
 	$$
 \end{df}
+\begin{df}[Strictly Increasing Differences]
+	$g$ dominates $f$ by strictly increasing differences, $g \succsim_{SID} f$, if for all $x'' > x'$, $$g(x'') - g(x') > f(x'') - f(x').$$
+	$\{f(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies strictly increasing differences (SID) if
+	$$
+	\forall \theta'' > \theta' ; \ f(\cdot, \theta'') \succsim_{SID} f(\cdot, \theta')
+	$$
+\end{df}
 
 \begin{itemize}
 	\item Note that $g \succsim_{IN} f$ implies $g \succsim_{SC} f$.
@@ -276,20 +294,107 @@ numbersep=1zw,%行番号と本文の間隔。
 	]
 	\equi g \succsim_{SC} f
 	\]
-	Note that 
+	Note that, for $Y,Z \subseteq \R$,
 	\[
-	\argmax_{x \in Y} g(x) \geq \argmax_{x \in Y} f(x)
-	\defi  [z \in \argmax_{x \in Y} g(x), \ w \in \argmax_{x \in Y} f(x)
-	\implies z \geq w
+	Y \geq Z
+	\defi  [y \in Y, \ z \in Z
+	\implies y \vee x \in Y, \ y \wedge z \in Z.
 	]
 	\]
 \end{thm}
 \begin{proof}.
 	\paragraph{$\Rightarrow)$}
-	Fix any $x'', x'$ such that $x'' > x'$.
+	We show contrapositive. Suppose that $g \not\succsim_{SC} f$.
+	There exist $x'', x'$ such that $x'' > x'$ and at least one of the following holds:
+	\begin{equation}
+		f(x'') \geq f(x'), g(x'') < g(x') \label{ms1}
+	\end{equation}
+	or
+	\begin{equation}
+		f(x'') > f(x'), g(x'') \leq g(x') \label{ms2}
+	\end{equation}
+	Let $Y := \{x', x''\}$, $G_Y := \argmax_{x \in Y} g(x)$ and $F_Y := \argmax_{x \in Y} f(x)$.
+	In case of (\ref{ms1}), $x' \vee x'' \notin G_Y$. In case of (\ref{ms2}), $x' \wedge x'' \notin F_Y$.
+	
+	\paragraph{$\Leftarrow)$}
+	Fix any $Y \subseteq X$ and $x'', x' \in Y$ such that $x' \in G_Y$ and $x'' \in F_Y$. We need to show that $x' \vee x'' \in G_Y$ and $x' \wedge x'' \in F_Y$.
+	First, since $x'' \in F_Y$, we have $f(x'') \geq f(x')$. By assumption, $g(x'') \geq g(x')$. Since $x' \in G_Y$, we have $x'' \in G_Y$ and $x' \vee x'' \in G_Y$.
+	
+	Next, we show $f(x'') = f(x')$. Note that this implies that $x' \wedge x'' \in F_Y$. 
+	Suppose toward contradiction that $f(x'') > f(x')$. Then, since $g \succsim_{SC} f$, we have $g(x'') > g(x')$. This contradicts $x' \in G_Y$.
 \end{proof}
 
+
+%%%
 \subsubsection{Characterization of IC}
 
+\begin{itemize}
+	\item Consider quasi-linear utility cases. Assume that $v(x, \theta)$ is absolutely continuous and differentiable on $\Theta$ for all $x$.
+\end{itemize}
+
+\begin{lem}
+	Let $V(\theta) := v(x(\theta), \theta) - t(\theta)$.
+	If a mechanism $(x,t)$ is IC, then
+	\begin{equation}
+	V(\theta) = V(\underline{\theta}) + \int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds \tag{LIC}	
+	\end{equation}
+\end{lem}
+\begin{proof}
+	RET.
+\end{proof}
+
+\begin{lem}
+	If a mechanism $(x,t)$ is IC and $\{v(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies SID, then
+	\begin{equation}
+	\text{$x(\theta)$ is non-decreasing in $\theta$.} \tag{M}
+	\end{equation}
+\end{lem}
+\begin{proof}
+	Fix $\theta'', \theta'$ such that $\theta'' > \theta'$. Since $\{v(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies SID, $v(\cdot, \theta'') \succsim_{SID} v(\cdot, \theta')$.
+%	By Milgrom-Shannon and IC, 
+%	\[
+%	x(\theta'')
+%	\in \argmax_{x \in x(\Theta)} v(x, \theta'') \geq \argmax_{x \in x(\Theta)} v(x, \theta')
+%	\ni x(\theta')
+%	\]
+	Suppose toward contradiction that $x(\theta'') < x(\theta')$. Since $v(\cdot, \theta'') \succsim_{SID} v(\cdot, \theta')$,
+	\[
+	v(x(\theta'), \theta'') - v(x(\theta''), \theta'')
+	> v(x(\theta'), \theta') - v(x(\theta''), \theta') \geq 0
+	\]
+	This violates IC. A contradiction.
+\end{proof}
+
+\begin{itemize}
+	\item The lemmas above shows that, assuming $\{v(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies SID, IC of $(x,t)$ implies (LIC) and (M).
+	\item We can show that the converse also holds.
+\end{itemize}
+
+\begin{lem}
+	Assume that $\{v(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies SID. If the conditions (LIC) and (M) hold, then $(x,t)$ is IC.
+\end{lem}
+\begin{proof}
+	Fix any $\theta, \theta'$. We need to show that $v(x(\theta), \theta) - t(\theta) \geq v(x(\theta'), \theta) - t(\theta')$.
+	Note that, by (LIC), we have 
+	\[
+	t(\theta) = v(x(\theta), \theta) - V(\underline{\theta}) - \int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds
+	\]
+	
+	Then,
+	\begin{align*}
+		&[v(x(\theta), \theta) - t(\theta)] - [v(x(\theta'), \theta) - t(\theta')] \\
+		&=
+		[v(x(\theta), \theta) - t(\theta)] - [v(x(\theta'), \theta) + v(x(\theta'), \theta') - v(x(\theta'), \theta') - t(\theta')] \\
+		&=
+		\int_{\underline{\theta}}^\theta v_\theta(x(s), s) ds
+		- \int_{\underline{\theta}}^{\theta'} v_\theta(x(s), s) ds
+		- [v(x(\theta'), \theta) - v(x(\theta'), \theta')] \\
+		&= \int_{\theta'}^\theta v_\theta(x(s), s) ds
+		- \int_{\theta'}^\theta v_\theta(x(s), \theta') ds
+		= \int_{\theta'}^\theta [v_\theta(x(s), s) - v_\theta(x(\theta'), s)] ds \geq 0
+	\end{align*}
+\end{proof}
 
 \end{document}
