@@ -21,5 +21,10 @@ Study Notes on Economics
 **2018-07**
 - [Spiegler (2016, QJE), Bayesian Networks and Boundedly Rational Expectations](https://academic.oup.com/qje/article-abstract/131/3/1243/2461139?redirectedFrom=PDF)
 
+  - Introduce Bayesian Network to the literature on nonrational expectation.
+  - DM formulates their subjective belief by fitting their causality model (BN) to the historical data.
+
 - [Spiegler (2017, REStud), “Data Monkeys”: A Procedural Model of Extrapolation from Partial Statistics](https://academic.oup.com/restud/article-abstract/84/4/1818/2929388)
+
+  - Suppose a DM follows some specific behavioral pattern, and derive some condition under which DM's subjective belief can be represented by BN.
 

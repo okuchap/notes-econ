@@ -95,6 +95,8 @@ numbersep=1zw,%行番号と本文の間隔。
 \DeclareMathOperator{\supp}{supp}
 \DeclareMathOperator{\Log}{Log}
 \DeclareMathOperator{\spn}{span}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
 
 \newcommand{\indep}{\mathop{\perp\!\!\!\!\perp}}
 
@@ -105,9 +107,10 @@ numbersep=1zw,%行番号と本文の間隔。
 
 \begin{document}
 \title{Notes on Mechanism Design}
-\author{Kyohei OKUMURA{\footnote{E-mail: kyohei.okumura@gmail.com}
-\footnote{UTokyo Econ M2}
-}}
+\author{Kyohei OKUMURA
+%{\footnote{E-mail: kyohei.okumura@gmail.com}
+%\footnote{UTokyo Econ M2}}
+}
 \date{\today}
 \maketitle
 
@@ -116,8 +119,177 @@ numbersep=1zw,%行番号と本文の間隔。
 	\item This study notes are mainly based on the lecture note written by Valimaki in 2018.
 \end{itemize}
 
-\section{}
+\section{Single Agent}
+\begin{itemize}
+	\item One principal v.s. one agent.
+	\item $a \in A$: allocation, $\theta \in \Theta$: agent's private info. $\theta \sim F(\theta)$.
+	\item $u^P(a, \theta)$, $u^A(a, \theta)$
+	\item We often assume quasi-linear payoff functions:
+	\item $a := (x, t)$, $u^P(a, \theta) := v^P(x, \theta) + t$, $u^A(a, \theta) := v^A(x, \theta) - t$.
+	\item As for implementability, we can discuss it focusing only on direct mechanisms, $(\Theta, \phi)$, w.l.o.g. (Revelation principle)
+\end{itemize}
 
+\subsection{Revenue Equivalence}
+\subsubsection{Milgrom and Segal (2002), Envelope Theorem}
+\begin{itemize}
+	\item $\Theta := [\underline{\theta}, \bar{\theta}]$. $f(\cdot, \theta): X \to \R$. $\{f(\cdot, \theta)\}_{\theta \in \Theta}$.
+	\item $V(\theta) := \max_{x \in X} f(x, \theta)$. $X^*(\theta) := \argmax_{x \in X} f(x, \theta)$
+\end{itemize}
+\begin{df}[Selection]
+	A function $x^*: \Theta \to X$ is a selection from $X^*$ if $x^*(\theta) \in X^*(\theta)$ for all $\theta \in \Theta$.
+\end{df}
+\begin{thm}[Milgrom and Segal (2002)]
+	Assume the following:
+	\begin{itemize}
+		\item For any $x \in X$, $f(x, \cdot): \Theta \to \R$ is absolutely continuous on $\Theta$.
+		\item For any $x \in X$, $f(x, \cdot): \Theta \to \R$ is differentiable on $\Theta$.
+	\end{itemize}
+	Then, the following holds:
+	\begin{itemize}
+		\item $V$ is absolutely continuous.
+		\item For any selection $x^*$ from $X^*$, $V(\theta) = V(\underline{\theta}) + \int_{\underline{\theta}}^\theta f_\theta(x^*(s), s) ds$.
+	\end{itemize}
+\end{thm}
+\begin{proof}
+	Note that the absolute continuity of $f(x, \theta)$ implies that $f_\theta(x, \theta) \in L^1(\Theta)$ for any $x \in X$.
+	\paragraph{(i) $V$ is absolutely continuous.}
+	It is sufficient to show that $V$ is Lipschitz continuous. Fix any $\theta', \theta$. Since any integrable function is bounded, for any $x$ there exists $L>0$ s.t. $|f_\theta(x, \theta)| \leq L$ for almost all $\theta \in \Theta$.
+	\begin{align*}
+		|V(\theta') - V(\theta)|
+		&=
+		\left|
+		\max_{x'} f(x', \theta') - \max_x f(x, \theta)
+		\right| \\
+		&\leq
+		\max_x
+		\left|
+		f(x, \theta') - f(x, \theta)
+		\right| 
+		=
+		\max_x
+		\left|
+		\int_{\theta'}^\theta f_\theta(x, s) ds
+		\right| \\
+		&\leq L \cdot |\theta' - \theta|
+	\end{align*}
+	
+	\paragraph{(ii)}
+	Fix any selection $x^*$ from $X^*$. By the result of (i),
+	\[
+	V(\theta) = V(\underline{\theta}) + \int_{\underline{\theta}}^\theta V'(s) ds
+	\]
+	Fix any selection $x^*$ and $\theta', \theta$ such that $\theta' > \theta$. By the definition of $V$ and $x^*$,
+	\begin{align*}
+		V(\theta) &= f(x^*(\theta), \theta) \geq f(x^*(\theta'), \theta) \\
+		V(\theta') &= f(x^*(\theta'), \theta') \geq f(x^*(\theta), \theta')
+	\end{align*}
+	Hence,
+	\[
+	V(\theta') - V(\theta) \leq f(x^*(\theta'), \theta') - f(x^*(\theta'), \theta).
+	\]
+	\[
+	\frac{V(\theta') - V(\theta)}{\theta' - \theta} \leq \frac{f(x^*(\theta'), \theta') - f(x^*(\theta'), \theta)}{\theta' - \theta}.
+	\]
+	Similarly,
+	\[
+	V(\theta) - V(\theta') \leq f(x^*(\theta'), \theta) - f(x^*(\theta'), \theta').
+	\]
+	\[
+	\frac{V(\theta') - V(\theta)}{\theta - \theta'} \geq \frac{f(x^*(\theta'), \theta) - f(x^*(\theta'), \theta')}{\theta - \theta'}.
+	\]
+	Note that by assumption $f(x, \cdot)$ is differentiable at all $\theta \in \Theta$. Therefore, if $V$ is differentiable at $\theta$, we have $V'(\theta) = f_\theta(x^*(\theta), \theta)$.
+\end{proof}
+
+\subsubsection{RET}
+\begin{itemize}
+	\item Focus on the agent's utility: $u := u^A$.
+	\item $A := \phi(\Theta)$. $V(\theta) := \max_{a \in A} u(a, \theta)$. $A^*(\theta) := \argmax_{a \in A} u(a, \theta)$.
+	\item Assume that $u(a, \cdot)$ is absolutely continuous and differentiable on $\Theta$ for all $a \in A$.
+	\item By incentive compatibility, $\phi(\theta) \in A^*(\theta)$ for all $\theta \in \Theta$: $\phi$ is a selection from $A^*$.
+\end{itemize}
+
+\begin{thm}[Revenue Equivalence Theorem]
+	\[
+	V(\theta) = V(\underline{\theta}) + \int_{\underline{\theta}}^\theta
+	 u_\theta(\phi(s), s) ds
+	\]
+	In particular, under quasi-linear utility, 
+	\[
+	V(\theta) = V(\underline{\theta}) + \int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds
+	\]
+	\[
+	t(\theta) = v(x(\theta), \theta) - V(\underline{\theta}) - \int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds
+	\]
+\end{thm}
+\begin{proof}
+	Milgrom and Segal. As for quasi-linear cases, the results follow from
+	$$
+	V(\theta) = v(x(\theta), \theta) - t(\theta)
+	$$
+\end{proof}
+
+\begin{itemize}
+	\item RET states that under any IC mechanism, except for the constant $V(\underline{\theta})$, the transfer from the agent to the principal is uniquely determined once the allocation rule $x$ is fixed.
+\end{itemize}
+
+\subsection{Characterization of IC}
+\subsubsection{Monotone Comparative Statics}
+\begin{itemize}
+	\item Consider parameterized optimization problem.
+	\item We often want to know how optimizers and optimal values change according to the changes in parameters.
+	\item Implicit function theorem: many assumptions are required.
+	\item Monotone comparative analysis = Sensitivity analysis
+	\item $\Theta \subseteq \R$. Two functions $g: \Theta \to \R$ and $f: \Theta \to \R$.
+\end{itemize}
+
+\begin{df}[Single Crossing]
+	$g$ dominates $f$ by single crossing property (SCP), $g \succsim_{SC} f$, if for all $x'' > x'$,
+	\begin{itemize}
+		\item $f(x'') - f(x') \geq 0 \implies g(x'') - g(x') \geq 0$
+		\item $f(x'') - f(x') > 0 \implies g(x'') - g(x') > 0$
+	\end{itemize}
+	
+	$\{f(\cdot, \theta)\}_{\theta \in \Theta}$ is an SCP family if
+	$$
+	\forall \theta'' > \theta' ; \ f(\cdot, \theta'') \succsim_{SC} f(\cdot, \theta')
+	$$
+\end{df}
+
+\begin{df}[Increasing Differences]
+	$g$ dominates $f$ by increasing differences, $g \succsim_{IN} f$, if for all $x'' > x'$, $$g(x'') - g(x') \geq f(x'') - f(x').$$
+	$\{f(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies increasing differences if
+	$$
+	\forall \theta'' > \theta' ; \ f(\cdot, \theta'') \succsim_{IN} f(\cdot, \theta')
+	$$
+\end{df}
+
+\begin{itemize}
+	\item Note that $g \succsim_{IN} f$ implies $g \succsim_{SC} f$.
+\end{itemize}
+
+\begin{thm}[Milgrom and Shannon]
+	$X \subseteq \R$. $f,g: X \to \R$.
+	\[
+	[\forall Y \subseteq X; \ \argmax_{x \in Y} g(x) \geq \argmax_{x \in Y} f(x)
+	]
+	\equi g \succsim_{SC} f
+	\]
+	Note that 
+	\[
+	\argmax_{x \in Y} g(x) \geq \argmax_{x \in Y} f(x)
+	\defi  [z \in \argmax_{x \in Y} g(x), \ w \in \argmax_{x \in Y} f(x)
+	\implies z \geq w
+	]
+	\]
+\end{thm}
+\begin{proof}.
+	\paragraph{$\Rightarrow)$}
+	Fix any $x'', x'$ such that $x'' > x'$.
+\end{proof}
+
+\subsubsection{Characterization of IC}
 
 
 \end{document}
