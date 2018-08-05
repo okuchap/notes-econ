@@ -28,3 +28,6 @@ Study Notes on Economics
 
   - Suppose a DM follows some specific behavioral pattern, and derive some condition under which DM's subjective belief can be represented by BN.
 
+## Notes on Math
+Some notes on Math are stored [here](./notes-math)
+

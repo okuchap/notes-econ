@@ -123,15 +123,24 @@ numbersep=1zw,%行番号と本文の間隔。
 \section{Single Agent}
 \begin{itemize}
 	\item One principal v.s. one agent.
-	\item $a \in A$: allocation, $\theta \in \Theta$: agent's private info. $\theta \sim F(\theta)$.
-	\item $u^P(a, \theta)$, $u^A(a, \theta)$
+	\item $a \in A$: allocation, $\theta \in \Theta$: agent's private info. $\theta \sim F(\theta)$. $u^P(a, \theta)$, $u^A(a, \theta)$.
 	\item We often assume quasi-linear payoff functions:
+	\begin{itemize}
 	\item $a := (x, t)$, $u^P(a, \theta) := v^P(x, \theta) + t$, $u^A(a, \theta) := v^A(x, \theta) - t$.
-	\item As for implementability, we can discuss it focusing only on direct mechanisms, $(\Theta, \phi)$, w.l.o.g. (Revelation principle)
+	\end{itemize}
+	\item A mechanism is a pair $M := (\Sigma, \phi)$, where $\Sigma$ is a message space and $\phi: \Sigma \to \Delta(A)$.
+	\item Agent's strategy: $\sigma: \Theta \to \Delta(\Sigma)$. Principal commits to a mechanism $M$.
+	\item Consider a social choice function $\psi: \Theta \to A$. We want to know whether $\psi$ is implementable (, i.e., achievable in equilibrium,) or not.
+	\item As for implementability, we can discuss it focusing only on direct mechanisms, assuming $\Sigma := \Theta$, w.l.o.g. (Revelation principle)
 \end{itemize}
+
 
 %%%
 \subsection{Revenue Equivalence}
+\begin{itemize}
+	\item In \S1.1 and \S1.2, we assume that the parameter space is a closed interval $\Theta := [\underline{\theta}, \bar{\theta}] \subseteq \R$.
+\end{itemize}
+
 \subsubsection{Milgrom and Segal (2002), Envelope Theorem}
 \begin{itemize}
 	\item $\Theta := [\underline{\theta}, \bar{\theta}]$. $f(\cdot, \theta): X \to \R$. $\{f(\cdot, \theta)\}_{\theta \in \Theta}$.
@@ -287,7 +296,7 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 	\item Note that $g \succsim_{IN} f$ implies $g \succsim_{SC} f$.
 \end{itemize}
 
-\begin{thm}[Milgrom and Shannon]
+\begin{thm}[Milgrom and Shannon (1994)]
 	$X \subseteq \R$. $f,g: X \to \R$.
 	\[
 	[\forall Y \subseteq X; \ \argmax_{x \in Y} g(x) \geq \argmax_{x \in Y} f(x)
@@ -396,5 +405,93 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 		= \int_{\theta'}^\theta [v_\theta(x(s), s) - v_\theta(x(\theta'), s)] ds \geq 0
 	\end{align*}
 \end{proof}
+
+\begin{thm}[Characterization of IC]
+	Assume that $\{v(\cdot, \theta)\}_\theta$ satisfies SID. Then, 
+	\[
+	\text{$(x, t)$ is IC} \equi \text{$x$ is non-decreasing, and $t$ is calculated by (LIC)}
+	\]
+\end{thm}
+
+
+%%%
+\subsection{General Case: Rochet's Theorem and Cyclical Monotonicity}
+\begin{itemize}
+	\item Consider quasi-linear utility cases.
+	\item Characterize IC mechanisms.
+\end{itemize}
+
+\begin{df}[weak monotonicity]
+	An allocation rule $x: \Theta \to A$ is weakly monotone if
+	\[
+	\forall \theta, \theta' ; \ [v(x(\theta), \theta') - v(x(\theta), \theta)]  + [v(x(\theta'), \theta) - v(x(\theta'), \theta')] \leq 0
+	\]
+\end{df}
+
+\begin{prop}
+	If $(x,t)$ is IC, then $x$ is weakly monotone.
+\end{prop}
+
+\begin{df}[cyclical monotonicity]
+	\[
+	S := \{(\theta^1, \cdots, \theta^{k+1}) \mid \forall i \in [k+1]; \theta^i \in \Theta, \ \theta^1 = \theta^{k+1}, \ k \in \Z^+ \}
+	\]
+	An allocation rule $x$ ie cyclically monotone if
+	, for any $(\theta^1, \cdots, \theta^{k+1}) \in S$, 
+	\begin{equation}
+		\sum_{i=1}^k [v(x^{i}, \theta^{i+1}) - v(x^{i}, \theta^{i})] \leq 0
+		\text{ , where $x^i := x(\theta^i)$}
+		\tag{CM} \label{cm}
+	\end{equation}
+\end{df}
+
+\begin{thm}[Rochet (1987)]
+	\[
+	\exists t; \ (x,t): \text{IC } \equi \text{x is cyclically monotone}.
+	\]
+\end{thm}
+
+\begin{proof}.
+\paragraph{$\Rightarrow)$} Easy.
+\paragraph{$\Leftarrow)$}
+	Fix $\theta_0 \in \Theta$.
+	\[
+	S(\theta) := \{(\theta^1, \cdots, \theta^{k+1}) \mid \forall i \in [k+1]; \theta^i \in \Theta, \ \theta^1 = \theta_0, \ \theta^{k+1} = \theta, \ k \in \Z^+ \}
+	\]
+	\[
+	V(\theta) := \sup_{(\theta^1, \cdots, \theta^{k+1}) \in S(\theta)} \sum_{i=1}^k [v(x^{i}, \theta^{i+1}) - v(x^{i}, \theta^{i})]
+	\]
+	\paragraph{(i) [$V(\theta_0) = 0$.]} By CM, $V(\theta_0) \leq 0$. Considering the case where $k := 1$, we see that $(\theta_0, \theta_0) \in S(\theta_0)$ satisfies $[v(x^1, \theta^2) - v(x^1, \theta^1)] = 0$. Therefore, $V(\theta_0) = 0$.
+	
+	\paragraph{(ii) [$V(\theta) < \infty$ for all $\theta \in \Theta$.]} Fix any $(\theta^1, \cdots, \theta^{k+1}) \in S(\theta)$.
+	\begin{align*}
+		0 = V(\theta_0)
+		&\geq \sum_{i=1}^k [v(x^{i}, \theta^{i+1}) - v(x^{i}, \theta^{i})] + [v(x^{i+1}, \theta_0) - v(x^{i+1}, \theta^{k+1})] \\
+		&= \sum_{i=1}^k [v(x^{i}, \theta^{i+1}) - v(x^{i}, \theta^{i})] + [v(x(\theta), \theta_0) - v(x(\theta), \theta)]
+	\end{align*}
+	\[
+	\therefore 
+		\sum_{i=1}^k [v(x^{i}, \theta^{i+1}) - v(x^{i}, \theta^{i})]
+		\leq v(x(\theta), \theta) - v(x(\theta), \theta_0)
+	\]
+	\[
+	\therefore 
+		V(\theta)
+		\leq v(x(\theta), \theta) - v(x(\theta), \theta_0)
+	\]
+	
+	\paragraph{(iii) [Construct the transfer rule]}
+	Fix any $\theta, \theta'$. By the same argument as in (ii), we can show that 
+	\[
+	V(\theta) \geq V(\theta') + v(x(\theta'), \theta) - v(x(\theta'), \theta')
+	\]
+	Define $t(\theta) := v(x(\theta), \theta) - V(\theta)$. With this $t$, a mechanism $(x,t)$ satisfies IC:
+	\[
+	v(x(\theta), \theta) - t(\theta) - (v(x(\theta'), \theta) - t(\theta'))
+	= V(\theta) - V(\theta') - v(x(\theta'), \theta) + v(x(\theta'), \theta') \geq 0
+	\]
+\end{proof}
+
+
 
 \end{document}
