@@ -4,7 +4,7 @@ Study Notes on Economics
 ## Now Reading
 - [Kleinberg, Waggoner, Weyl (2018), Descending Price Optimally Coordinates Search](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2753858)
 
-- [Keller, Rady, Cripps (2004, ECMA), Strategic Experimentation with Exponential Bandits](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1468-0262.2005.00564.x)
+- [Besanko, Tong, Wu (RAND, 2018), Subsidizing research programs with “if” and “when” uncertainty in the face of severe informational constraints](https://onlinelibrary.wiley.com/doi/abs/10.1111/1756-2171.12227)
 
 - Valimaki (2018), Notes on Mechanism Design
 
@@ -14,7 +14,13 @@ Study Notes on Economics
 ## Done
 
 **2018-08**
+
+- [Keller, Rady, Cripps (2004, ECMA), Strategic Experimentation with Exponential Bandits](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1468-0262.2005.00564.x)
+
+  - *[To be written.]*
+
 - [Jon Kleinberg, Robert Kleinberg (2018, EC18), Delegated Search Approximates Efficient Search](https://dl.acm.org/citation.cfm?id=3219205)
+
   - By change of variables, delegation problems can be reduced to online decision making problem.
   - Prophet Inequalities can give the lower bound of principal's payoff in the simple mechanism.
 
@@ -29,5 +35,5 @@ Study Notes on Economics
   - Suppose a DM follows some specific behavioral pattern, and derive some condition under which DM's subjective belief can be represented by BN.
 
 ## Notes on Math
-Some notes on Math are stored [here](./notes-math)
+Some notes on Math are stored [here](./notes-math).
 

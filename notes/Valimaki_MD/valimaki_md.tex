@@ -26,6 +26,7 @@
 \newtheorem{df}{Def.}[section]
 \newtheorem{eg}{e.g.}[section]
 \newtheorem{rem}{Rem.}[section]
+\newtheorem{ass}{Ass.}
 %
 
 \usepackage{listings}
@@ -406,7 +407,7 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 	\end{align*}
 \end{proof}
 
-\begin{thm}[Characterization of IC]
+\begin{thm}[Characterization of IC] \label{ic_char}
 	Assume that $\{v(\cdot, \theta)\}_\theta$ satisfies SID. Then, 
 	\[
 	\text{$(x, t)$ is IC} \equi \text{$x$ is non-decreasing, and $t$ is calculated by (LIC)}
@@ -491,6 +492,177 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 	= V(\theta) - V(\theta') - v(x(\theta'), \theta) + v(x(\theta'), \theta') \geq 0
 	\]
 \end{proof}
+
+
+
+%%%
+\subsection{Optimizing over Incentive Compatible Mechanisms}
+\begin{ass}[Assumptions for IC characterization]
+	In \S1.4, we assume that (1) utility function is quasi linear, (2) $v(x, \theta)$ is absolutely continuous and differentiable on $\Theta$ for all $x$, and (3) $\{v(\cdot, \theta)\}_\theta$ has SID.
+\end{ass}
+\begin{ass}[Private Values]
+	$v^P(x, \theta) \equiv v^P(x)$
+\end{ass}
+\begin{ass}[Absolutely continuous distribution]
+	The distribution function $F$ is absolutely continuous, i.e., 
+	there exists $f:\Theta \to \R_+$ s.t. $F(x) := \int_{\underline{\theta}}^x f(s) ds$
+\end{ass}
+
+\begin{itemize}
+	\item Optimal Mechanism = Revenue Maximizing Mechanism
+	\item By Thm. \ref{ic_char}, $(x, t)$ is IC iff $x$ is nondecreasing and $t$ is calculated by Envelope theorem.
+\end{itemize}
+\begin{align*}
+	\text{[Expected Revenue]}
+	&=
+	\E_\theta \left[
+	t(\theta) + v^P(x(\theta))
+	\right] \\
+	&=
+	\E_\theta \left[
+	v(x(\theta), \theta) - V(\underline{\theta}) - \int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds + v^P(x(\theta))
+	\right] \\
+	&= \E_\theta \left[
+	S(x(\theta), \theta) - V(\underline{\theta}) - \int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds
+	\right]
+\end{align*}
+\begin{align*}
+	\E_\theta \left[
+	\int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds
+	\right]
+	&=
+	\int_{\underline{\theta}}^{\bar{\theta}}
+	\int_{\underline{\theta}}^\theta
+	 v_\theta(x(s), s) ds
+	d F(\theta) \\
+	&= 
+	\int_{\underline{\theta}}^{\bar{\theta}}
+	\int_{s}^{\bar{\theta}}
+	 v_\theta(x(s), s) 
+	dF(\theta) ds \\
+	&= 
+	\int_{\underline{\theta}}^{\bar{\theta}}
+	 (1 - F(s)) v_\theta(x(s), s)
+	 ds \\
+	&= 
+	\int_{\underline{\theta}}^{\bar{\theta}}
+	 (1 - F(\theta)) v_\theta(x(\theta), \theta)
+	 d\theta \\
+	&= 
+	\int_{\underline{\theta}}^{\bar{\theta}}
+	 v_\theta(x(\theta), \theta) \frac{1 - F(\theta)}{f(\theta)}
+	 dF(\theta) \\
+	&=
+	\E_\theta \left[
+	 v_\theta(x(\theta), \theta) \frac{1 - F(\theta)}{f(\theta)}
+	\right]
+\end{align*}
+\[
+\therefore \quad
+\text{[Expected Revenue]}
+=
+\E_\theta \left[
+	S(x(\theta), \theta) - V(\underline{\theta})
+	- v_\theta(x(\theta), \theta) \frac{1 - F(\theta)}{f(\theta)}
+	\right]
+\]
+\begin{itemize}
+	\item The principal solves the following revenue maximization problem:
+\end{itemize}
+\[
+\max_{x(\cdot), V(\underline{\theta})}
+\E_\theta \left[
+	S(x(\theta), \theta) - V(\underline{\theta})
+	- v_\theta(x(\theta), \theta) \frac{1 - F(\theta)}{f(\theta)}
+	\right]
+\text{ s.t. }
+x(\cdot): \text{increasing.}
+\]
+
+\begin{itemize}
+	\item It is optimal to set $V(\underline{\theta}) := 0$, assuming that the outside option value is zero. Then, the problem can be reduced to
+\end{itemize}
+\[
+\max_{x(\cdot)}
+\E_\theta \left[
+	\underbrace{S(x(\theta), \theta)
+	- v_\theta(x(\theta), \theta) \frac{1 - F(\theta)}{f(\theta)}
+	}_{(\star)}
+	\right]
+\text{ s.t. }
+x(\cdot): \text{nondecreasing.}
+\]
+\begin{itemize}
+	\item If $v^P(\theta) \equiv 0$,
+	$(\star) = v(x(\theta), \theta)
+	- v_\theta(x(\theta), \theta) \frac{1 - F(\theta)}{f(\theta)}
+	=:$ [the virtual valuation of the bidder.]
+\end{itemize}
+
+\subsection*{Finding a Solution}
+\begin{itemize}
+	\item Just ignoring the monotonicity of $x$ and solve the relaxed problem. Fix $\theta \in \Theta$, and solve maximization problem for each $\theta$.
+	\item \ocomment{[Is the argument below valid in case $x$ is not $\mC^1$ on $\Theta$?]}
+\end{itemize}
+\begin{ass}
+	Assume that $v$ is linear in $\theta$.
+\end{ass}
+\begin{ass}
+	Assume the interior solution. (?)
+\end{ass}
+\[
+\max_x S(x, \theta) - v_\theta(x, \theta) \frac{1 - F(\theta)}{f(\theta)}
+\]
+\begin{equation}
+	S_{x}(x, \theta) - v_{\theta x}(x, \theta) \frac{1 - F(\theta)}{f(\theta)} = 0  \tag{FOC}
+\end{equation}
+\begin{align*}
+	&\underbrace{
+	\left(
+	\underbrace{
+	S_{x\theta}(x, \theta)
+	}_{= v_{x\theta}(x, \theta) \ (\because \ PV)}
+	- v_{\theta x}(x, \theta) \frac{d}{d\theta}\frac{1 - F(\theta)}{f(\theta)}
+	- \underbrace{
+	v_{\theta x \theta}(x, \theta)}_{=0}
+	\frac{1 - F(\theta)}{f(\theta)}
+	\right)
+	}_{= v_{x\theta}(x, \theta) \left(1 - \frac{d}{d\theta}\frac{1 - F(\theta)}{f(\theta)} \right)}
+	d\theta \\
+	&+
+	\left(
+	\underbrace{
+	S_{xx}(x, \theta)
+	- v_{\theta xx}(x, \theta) \frac{1 - F(\theta)}{f(\theta)}
+	}_{\leq 0 \quad (\because \ SOC)}
+	\right) dx
+	= 0 \\
+	&\equi
+	\left( v_{x\theta}(x, \theta)  - v_{x\theta}(x, \theta) \frac{d}{d\theta}\frac{1 - F(\theta)}{f(\theta)} \right) d\theta + (\cdots)dx = 0 \\
+	&\therefore \quad \sgn \left( \frac{dx}{d\theta} \right) = \sgn\left( v_{x\theta}(x, \theta)  - v_{x\theta}(x, \theta) \frac{d}{d\theta}\frac{1 - F(\theta)}{f(\theta)} \right) 
+\end{align*}
+
+\begin{itemize}
+	\item Note that since $v$ has SID, $v_{x \theta} \geq 0$.
+	\item The following condition (MHR: monotone hazard rate condition) is sufficient in order for $x$ to be nondecreasing:
+\end{itemize}
+\[
+\frac{d}{d\theta}\frac{1 - F(\theta)}{f(\theta)} \leq 0
+\equi \frac{d}{d\theta}\frac{f(\theta)}{1 - F(\theta)} \geq 0
+\]
+
+
+%%%
+\newpage
+\section{Many Agents}
+
+
+
+
+
 
 
 
