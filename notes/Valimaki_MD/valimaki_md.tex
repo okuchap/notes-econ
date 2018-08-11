@@ -66,6 +66,7 @@ numbersep=1zw,%行番号と本文の間隔。
 \newcommand{\mB}{\mathcal{B}}
 \newcommand{\mC}{\mathcal{C}}
 \newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
 \newcommand{\mL}{\mathcal{L}}
 \newcommand{\mN}{\mathcal{N}}
 \newcommand{\mM}{\mathcal{M}}
@@ -293,9 +294,12 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 	$$
 \end{df}
 
-\begin{itemize}
-	\item Note that $g \succsim_{IN} f$ implies $g \succsim_{SC} f$.
-\end{itemize}
+\begin{rem}
+	$g \succsim_{IN} f$ implies $g \succsim_{SC} f$.
+\end{rem}
+\begin{rem}
+	$\{f(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies SID iff $\{f(x, \cdot)\}_{x \in X}$ satisfies SID.
+\end{rem}
 
 \begin{thm}[Milgrom and Shannon (1994)]
 	$X \subseteq \R$. $f,g: X \to \R$.
@@ -337,10 +341,9 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 
 %%%
 \subsubsection{Characterization of IC}
-
-\begin{itemize}
-	\item Consider quasi-linear utility cases. Assume that $v(x, \theta)$ is absolutely continuous and differentiable on $\Theta$ for all $x$.
-\end{itemize}
+\begin{ass}
+	Quasi-linear utility. $v(x, \theta)$ is absolutely continuous and differentiable on $\Theta$ for all $x$.
+\end{ass}
 
 \begin{lem}
 	Let $V(\theta) := v(x(\theta), \theta) - t(\theta)$.
@@ -382,7 +385,7 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 \end{itemize}
 
 \begin{lem}
-	Assume that $\{v(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies SID. If the conditions (LIC) and (M) hold, then $(x,t)$ is IC.
+	Assume that $\{v(\cdot, \theta)\}_{\theta \in \Theta}$ satisfies (S)ID. If the conditions (LIC) and (M) hold, then $(x,t)$ is IC.
 \end{lem}
 \begin{proof}
 	Fix any $\theta, \theta'$. We need to show that $v(x(\theta), \theta) - t(\theta) \geq v(x(\theta'), \theta) - t(\theta')$.
@@ -403,7 +406,11 @@ This subsection is based on the lecture slides by John K.-H. Quah:
 		- [v(x(\theta'), \theta) - v(x(\theta'), \theta')] \\
 		&= \int_{\theta'}^\theta v_\theta(x(s), s) ds
 		- \int_{\theta'}^\theta v_\theta(x(s), \theta') ds
-		= \int_{\theta'}^\theta [v_\theta(x(s), s) - v_\theta(x(\theta'), s)] ds \geq 0
+		= 
+		\int_{\theta'}^\theta \underbrace{
+		[v_\theta(x(s), s) - v_\theta(x(\theta'), s)]
+		}_{\geq 0 \ \because \ ID}
+		ds \geq 0
 	\end{align*}
 \end{proof}
 
@@ -659,11 +666,169 @@ x(\cdot): \text{nondecreasing.}
 \newpage
 \section{Many Agents}
 
+\subsection{Setup}
+\begin{df}[Solution Concepts] $(M, \phi)$: mechanism
+	\begin{enumerate}
+		\item $\sigma = (\sigma_1, \dots, \sigma_N)$ is a dominant strategy equilibrium (DSE) if
+		\[
+		\forall i \ \forall \theta_i \ \forall m_i \ \forall m_{-i} \forall \theta_{-i}; \quad
+		u_i(\phi(\sigma_i(\theta_i), m_{-i} ; \theta_i, \theta_{-i}))
+		\geq u_i(\phi(m_i, m_{-i} ; \theta_i, \theta_{-i}))
+		\]
+		\item $\sigma$ is ex-post equilibrium if
+		\[
+		\forall i \ \forall \theta_i \ \forall m_i \forall \theta_{-i}; \quad
+		u_i(\phi(\sigma_i(\theta_i), \sigma_{-i}(\theta_{-i}) ; \theta_i, \theta_{-i}))
+		\geq u_i(\phi(m_i, \sigma_{-i}(\theta_{-i}) ; \theta_i, \theta_{-i}))
+		\]
+		\textnormal{In words, as long as the other players are truthful, their type is not important for a players' incentives for truthful reporting.}
+		\item $\sigma$ is Bayes-Nash equilibrium (BNE) in pure strategies if
+		\[
+		\forall i \ \forall \theta_i \ \forall m_i; \quad
+		\E_{\theta_{-i} \mid \theta_i}[
+		u_i(\phi(\sigma_i(\theta_i), \sigma_{-i}(\theta_{-i}) ; \theta_i, \theta_{-i}))]
+		\geq
+		\E_{\theta_{-i} \mid \theta_i}[u_i(\phi(m_i, \sigma_{-i}(\theta_{-i}) ; \theta_i, \theta_{-i}))]
+		\]
+	\end{enumerate}
+\end{df}
+\begin{rem}
+	A DNE is ex-post eqm. An ex-post eqm is BNE. 
+\end{rem}
+\begin{rem}
+	The revelation principle holds for all three equilibrium concepts.
+\end{rem}
+
+\subsection{Notions of Incentive Compatibility}
+\begin{itemize}
+	\item DSIC mechanisms, ex-post IC mechanisms, BNIC mechanisms.
+\end{itemize}
+
+\subsection{Individual Rationality}
+\begin{ass}
+	The value of an outside option is constant on type and normalized to zero.
+\end{ass}
+\begin{df} Consider an IC mechanism $(x,t)$.
+	\begin{enumerate}
+		\item $(x,t)$ is ex-post individually rational (IR) if
+		\[
+		\forall i \forall \theta; \quad
+		v_i(x(\theta), \theta) - t_i(\theta) \geq 0
+		\]
+		\item $(x,t)$ is interim IR if
+		\[
+		\forall i \forall \theta; \quad
+		\E_{\theta_{-i} \mid \theta_i}[v_i(x(\theta), \theta) - t_i(\theta)] \geq 0
+		\]
+		\item $(x,t)$ is ex-ante IR if
+		\[
+		\forall i \forall \theta; \quad
+		\E_{\theta}[v_i(x(\theta), \theta) - t_i(\theta)] \geq 0
+		\]
+	\end{enumerate}
+\end{df}
+\begin{rem}
+	An ex-post IR mechanism is interim IR and ex-ante IR.
+\end{rem}
+\begin{rem}
+	For ex-post IR, it is sometimes useful to impose the following restriction: consider the case where other players are not truthful:
+	\[
+	\forall i \forall m_{-i} \forall \theta; \quad
+	v_i(x(\theta_i, m_{-i}), \theta) - t_i(\theta_i, m_{-i}) \geq 0
+	\]
+\end{rem}
+
+\subsection{Bayesian and Dominant Strategy Mechanisms}
+??
+
+\subsection{Efficient Mechanisms}
+\begin{ass}
+	Quasi-linear utilities, private values.
+\end{ass}
+\begin{df}[Private Values]
+	The model has private values if
+	\[
+	\forall i \in \{0,1,\dots,N\} \ \forall \theta_{-i} \theta'_{-i} \in \Theta_{-i}; \quad
+	v_i(x, \theta_i, \theta_{-i}) = v_i(x, \theta_i, \theta'_{-i}) \equiv v_i(x, \theta_i)
+	\]
+\end{df}
+
+\begin{itemize}
+	\item Consider the case where $v_0 \equiv 0$, $t_0 = \sum_{i=1}^N t_i$.
+	\[
+	x^*(\theta) \in \argmax_{x \in X}\sum_{i=1}^N v_i(x, \theta)
+	= \argmax_{x \in X}\sum_{i=1}^N v_i(x, \theta_i)
+	\]
+\end{itemize}
+\begin{df}[VCG mechanism]
+	Fix any function $\tau_i: M_{-i} \to \R$ for all $i$. Define the transfer rule:
+	\[
+	t^*_i(m) := - \sum_{j \neq i} v_j(x^*(m), m_j) + \tau_i(m_{-i})
+	\]
+	The mechanism $(x^*, t^*)$ is called VCG mechanism.
+\end{df}
+\begin{rem}
+	VDG mechanism is a DSIC mechanism.
+\end{rem}
+\begin{rem}[Green \& Laffont(1979)]
+	If there are no restrictions on the domain of preferences for the players, then VDG mechanisms are the only mechanisms that make truthful revelation a dominant strategy for the efficient allocation rule $x^*$.
+\end{rem}
+
+\begin{df}[Pivot mechanism (the externality mechanism)]
+	Pivot mechanism is a VCG mechanism that set 
+	\[
+	\tau_i(m_i) := \max_{x \in X} \sum_{j \neq i} v_j(x^*(m), m_j)
+	\]
+\end{df}
+\begin{itemize}
+	\item $W_{\mS}(\theta) := \max_{x \in X} \sum_{i \in \mS}v_i(x, \theta_i)$
+	\item In a pivot mechanism, player $i$ pays her externality and gets her marginal contribution to the social welfare:
+	\[
+	t_i(\theta) = W_{[N] \setminus \{i\}}(\theta) - \sum_{j \neq i} v_j(x^*(\theta), \theta_j)
+	\]
+	\[
+	v_i(x^*(\theta), \theta_i) - t_i(\theta) = W_{[N]}(\theta) - W_{[N] \setminus \{i\}}(\theta)
+	\]
+	\item Correlation in the agents' types makes no difference in the above argument: It works for all private values settings with quasi-linear payoffs.
+\end{itemize}
+
+\subsubsection{Budget Balance}
+\begin{df}[Budget Balance] $(x,t): mechanism$.
+	\begin{enumerate}
+		\item $(x,t): mechanism$ is ex-post budget balanced if $\forall \theta; \ \sum_{i=1}^N t_i(\theta) = 0$.
+		\item $(x,t): mechanism$ is ex-ante budget balanced if $\E_\theta [ \sum_{i=1}^N t_i(\theta)] = 0$.
+	\end{enumerate}
+\end{df}
+\begin{ass}
+	independent type, i.e., $\forall i; \ \theta_i \indep \theta_{-i}$.
+\end{ass}
+\begin{df}[AGV mechanism (expected externality mechanism)] A mechanism $(x^*, t)$, with the following transfer rule $t$, is called AGV mechanism:
+	\[
+	t_i(m) := - \underbrace{
+	\E_{\theta_{-i}} \left[
+	\sum_{j \neq i} v_j(x^*(m_i, \theta_{-i}), \theta_j)
+	\right]
+	}_{=: \mE_i(m_i)}
+	+ \tau_i(m_{-i})
+	\]
+\end{df}
+\begin{rem}
+	In AGV mechanism, truthful report is a BNIC. (NB: No need to use independence here.)
+\end{rem}
+\begin{rem} AGV mechanism with the following $(\tau_i)_i$ is ex-post BB.
+\[
+\tau_i(m_{-i}) = \frac{\sum_{j \neq i} \mE_j(m_j)}{N-1}
+\]
+\end{rem}
 
 
 
-
-
+\subsubsection{BB in BNE}
+\begin{itemize}
+	\item What more can be done with BNE as the solution concept?
+	\item As long as we assume IPV, all BNE implementing the efficient decision rule have the same expected payoffs.
+	\item The expected payment etc. can be calculated using VCG.
+\end{itemize}
 
 
 \end{document}
