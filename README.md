@@ -4,18 +4,27 @@
 
 ## Now Reading
 
-- [Epstein, Halevy (2018, REStud), Ambiguous Correlation](https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdy008/4829922)
-
 - [Besanko, Tong, Wu (RAND, 2018), Subsidizing research programs with “if” and “when” uncertainty in the face of severe informational constraints](https://onlinelibrary.wiley.com/doi/abs/10.1111/1756-2171.12227)
 
-- Valimaki (2018), Notes on Mechanism Design
+- [Valimaki (2018), Notes on Mechanism Design](notes/Valimaki_MD/valimaki_md.pdf)
 
 ## To Do
+### Bounded Rationality
 - [Eyster, Rabin (2014, QJE), Extensive Imitation is Irrational and Harmful](https://academic.oup.com/qje/article/129/4/1861/1853662)
 
-- [Jullien, Pavan (REStud, forthcoming), Information Management and Pricing in Platform Markets](https://academic.oup.com/restud/advance-article-abstract/doi/10.1093/restud/rdy040/5062616?redirectedFrom=fulltext)
+- [Epstein, Halevy (2018, REStud), Ambiguous Correlation](https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdy008/4829922)
+  - aversion to ambiguity about relation v.s. aversion to ambiguity about bias?
+  - *[Need to study ambiguity in advance.]*
+  - [Machina, Siniscalchi (2014), Ambiguity and Ambiguity Aversion](https://www.sciencedirect.com/science/article/pii/B9780444536853000131)
 
-- [Kleinberg, Waggoner, Weyl (2018), Descending Price Optimally Coordinates Search](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2753858)
+### GSP
+- [Edelman, Ostrovsky, Schwarz (2007, AER), Internet Advertising and the Generalized Second-Price Auction: Selling Billions of Dollars Worth of Keywords](https://www.aeaweb.org/articles?id=10.1257/aer.97.1.242)
+
+- [Cavallo et al. (2018, EC18), Matching Auctions for Search and Native Ads](https://dl.acm.org/citation.cfm?id=3219191)
+
+
+## Watch
+- [Jullien, Pavan (REStud, forthcoming), Information Management and Pricing in Platform Markets](https://academic.oup.com/restud/advance-article-abstract/doi/10.1093/restud/rdy040/5062616?redirectedFrom=fulltext)
 
 ## Done
 
