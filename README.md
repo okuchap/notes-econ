@@ -1,12 +1,11 @@
 # notes-econ
+
 - Study Notes on Economics
 - Some notes on math are stored [here](./notes-math).
 
 
 
 ## Now Reading
-
-- [Charness, Levin (2009, AEJMicro), The Origin of the Winner's Curse: A Laboratory Study](https://www.aeaweb.org/articles?id=10.1257/mic.1.1.207)
 
 - [Edelman, Ostrovsky, Schwarz (2007, AER), Internet Advertising and the Generalized Second-Price Auction: Selling Billions of Dollars Worth of Keywords](https://www.aeaweb.org/articles?id=10.1257/aer.97.1.242)
 
@@ -25,6 +24,7 @@
   - *[Need to study ambiguity in advance.]*
   - [Machina, Siniscalchi (2014), Ambiguity and Ambiguity Aversion](https://www.sciencedirect.com/science/article/pii/B9780444536853000131)
 
+
 ### GSP
 - [Cavallo et al. (2018, EC18), Matching Auctions for Search and Native Ads](https://dl.acm.org/citation.cfm?id=3219191)
 
@@ -39,10 +39,20 @@
 - [Goeree and Kushnir (2017), A Geometric Approach to Mechanism Design](https://papers.ssrn.com/sol3/Delivery.cfm?abstractid=1974922)
 
 
+### Bounded Rationality
+- [Crawford, Iriberri (2007, ECMA) Level‐k Auctions: Can a Nonequilibrium Model of Strategic Thinking Explain the Winner's Curse and Overbidding in Private‐Value Auctions?](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1468-0262.2007.00810.x)
+
+- [Eyster, Rabin (2005, QJE), Cursed Equilibrium](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1468-0262.2005.00631.x)
+
+
 
 ## Done
 
 **2018-08**
+- [Charness, Levin (2009, AEJMicro), The Origin of the Winner's Curse: A Laboratory Study](https://www.aeaweb.org/articles?id=10.1257/mic.1.1.207)
+  - Not failure to take account of the cognition of other players or beliefs about other players, but failure to recognize that a future contingency is relevant for their current decision is the driving force of behind the winner's curse.
+  - Eyster&Rabin's fully cursed model is well fit to the data.
+  - more detailed explanation have some effects.(framing), heterogeniety across the population, little learning over time.
 
 - [Enke, Zimmermann (2017, REStud), Correlation Neglect in Belief Formation](https://academic.oup.com/restud/advance-article-abstract/doi/10.1093/restud/rdx081/4772809)
   - Experimental evidence of "double counting", or correlation neglect.

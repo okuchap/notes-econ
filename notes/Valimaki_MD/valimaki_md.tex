@@ -239,10 +239,12 @@ numbersep=1zw,%行番号と本文の間隔。
 	\]
 \end{thm}
 \begin{proof}
-	Milgrom and Segal. As for quasi-linear cases, the results follow from
-	$$
-	V(\theta) = v(x(\theta), \theta) - t(\theta)
-	$$
+	Milgrom and Segal.
+	
+	As for quasi-linear cases, since
+	$
+	u((x,t), \theta) = v(x, \theta) - t
+	$, we have $u_\theta = v_\theta$. Note that $V(\theta) = v(x(\theta), \theta) - t(\theta)$.
 \end{proof}
 
 \begin{itemize}
@@ -693,7 +695,7 @@ x(\cdot): \text{nondecreasing.}
 	\end{enumerate}
 \end{df}
 \begin{rem}
-	A DNE is ex-post eqm. An ex-post eqm is BNE. 
+	A DSE is ex-post eqm. An ex-post eqm is BNE. 
 \end{rem}
 \begin{rem}
 	The revelation principle holds for all three equilibrium concepts.
@@ -740,6 +742,43 @@ x(\cdot): \text{nondecreasing.}
 
 \subsection{Bayesian and Dominant Strategy Mechanisms}
 ??
+\begin{df}[Standard Independent Private Value Model]
+	In the standard IPV model, we assume
+	\begin{enumerate}
+		\item For all $i$, $\Theta_i := [\underline{\theta}_i, \bar{\theta}_i]$
+		\item quasi-linear utility
+		\item IPV
+		\item \ocomment{The assumptions for the envelope theorem hold. (??)} 
+		\footnote{
+		Let $V_i(\theta_i) := \max_{m_i}$
+		}
+	\end{enumerate}
+\end{df}
+\begin{ass}
+	For all $i$, $\Theta_i := [\underline{\theta}_i, \bar{\theta}_i]$,  $v_i(x_i, \theta_i)$ satisfies SID, and is †sufficiently smooth w.r.t. $\theta_i$. IPV.
+\end{ass}
+\begin{itemize}
+	\item Define $V_i$ as follows:
+	\[V_i(\theta_i) := \max_{m_i} \{
+	\E_{\theta_{-i}}[
+	v_i(x(m_i, \theta_{-i}), \theta_i) - t_i(m_i, \theta_{-i}) 
+	]\}
+	= \max_{m_i} \{
+	\tilde{v}_i(x(m_i), \theta_i) - \tilde{t}_i(m_i)
+	\}
+	\]
+	\item $\tilde{v}_i(x(m_i), \theta_i) := \E_{\theta_{-i}}[
+	v_i(x(m_i, \theta_{-i}), \theta_i)]$, $\tilde{t}_i(m_i) := \E_{\theta_{-i}}[t_i(m_i, \theta_{-i})]$
+	\item Then, we can apply the same argument as in one agent case.
+\end{itemize}
+
+\begin{rem}
+	Assume that $v_i(x, \theta_i)$ satisfies SID. Then,
+	\begin{itemize}
+		\item $(x,t)$: DSIC implies $x(m_i, \theta_{-i})$ is non-decreasing in $m_i$ for all $\theta_{-i} \in \Theta_i$.
+		\item $(x,t)$: BIC implies $\E_{\theta_{-i}}[ x(m_i, \theta_{-i})]$ is non-decreasing in $m_i$.
+	\end{itemize}
+\end{rem}
 
 \subsection{Efficient Mechanisms}
 \begin{ass}
@@ -768,7 +807,7 @@ x(\cdot): \text{nondecreasing.}
 	The mechanism $(x^*, t^*)$ is called VCG mechanism.
 \end{df}
 \begin{rem}
-	VDG mechanism is a DSIC mechanism.
+	VDG mechanism is a DSIC mechanism. ($\because$ By definition of $x^*$.)
 \end{rem}
 \begin{rem}[Green \& Laffont(1979)]
 	If there are no restrictions on the domain of preferences for the players, then VDG mechanisms are the only mechanisms that make truthful revelation a dominant strategy for the efficient allocation rule $x^*$.
@@ -821,6 +860,19 @@ x(\cdot): \text{nondecreasing.}
 \]
 \end{rem}
 
+\begin{itemize}
+	\item ex-post BB does not hold for correlated private values. ($\mE_i(m_i)$ should not depend on $\theta_i$.)
+	\item It is possible to design variants with similarities to AGV mechanism that work also with correlated values settings.
+\end{itemize}
+\[
+\hat{t}_i(m) := - \sum_{j \neq i} v_j(x^*(m), m_j) + \E_{\theta_i}\left[
+\sum_{j=1}^N v_j(x^*(\theta_i, m_{-i}), m_j) \mid \theta_{-i} = m_{-i}
+\right]
+\]
+\begin{itemize}
+	\item $(x^*, \hat{t})$ is a VCG mechanism, and it is ex-ante BB and ex-ante IC.
+	\item What can be said about incentives to participate interim?
+\end{itemize}
 
 
 \subsubsection{BB in BNE}
@@ -829,6 +881,11 @@ x(\cdot): \text{nondecreasing.}
 	\item As long as we assume IPV, all BNE implementing the efficient decision rule have the same expected payoffs.
 	\item The expected payment etc. can be calculated using VCG.
 \end{itemize}
+
+
+\subsubsection{IC, BB and Participation}
+
+
 
 
 \end{document}
