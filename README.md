@@ -28,6 +28,9 @@
 - [Cavallo et al. (2018, EC18), Matching Auctions for Search and Native Ads](https://dl.acm.org/citation.cfm?id=3219191)
 
 
+### Prophet Inequalities
+- [Lucier (2017, SIGecom), An economic view of prophet inequalities](https://dl.acm.org/citation.cfm?id=3144725)
+
 
 ## Watch
 ### Platform Design (Two-sided market)
