@@ -50,7 +50,7 @@
 
 **2018-08**
 - [Charness, Levin (2009, AEJMicro), The Origin of the Winner's Curse: A Laboratory Study](https://www.aeaweb.org/articles?id=10.1257/mic.1.1.207)
-  - Not failure to take account of the cognition of other players or beliefs about other players, but failure to recognize that a future contingency is relevant for their current decision is the driving force of behind the winner's curse.
+  - The driving force behind the winner's curse is *not* failure to take account of the cognition of other players or beliefs about other players (cf: Cursed Eqm., Level-k), *but* **failure to recognize that a future contingency is relevant for their current decision.**
   - Eyster&Rabin's fully cursed model is well fit to the data.
   - more detailed explanation have some effects.(framing), heterogeniety across the population, little learning over time.
 
