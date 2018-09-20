@@ -1,0 +1,573 @@
+\documentclass[11pt,a4paper,dvipdfmx]{article}
+%\documentclass[autodetect-engine,dvipdfmx-if-dvi,ja=standard]{bxjsarticle}
+
+\usepackage{ascmac}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[noBBpl]{mathpazo}
+%\linespread{1.05}
+\usepackage{mathtools, amsmath, amssymb, amsthm}
+\usepackage{amsfonts}
+\usepackage{braket}
+%\usepackage{amssymb}
+\usepackage{url}
+\usepackage{cases}
+\usepackage{bbm}
+
+%% citation
+\usepackage[longnamesfirst]{natbib}
+
+%
+\theoremstyle{plain}
+\newtheorem{thm}{Thm.}[section]
+\newtheorem{lem}{Lem.}[section]
+\newtheorem{cor}{Cor.}[section]
+\newtheorem{prop}{Prop.}[section]
+\newtheorem{df}{Def.}[section]
+\newtheorem{eg}{e.g.}[section]
+\newtheorem{rem}{Rem.}[section]
+\newtheorem{ass}{Ass.}
+%
+
+\usepackage{listings}
+\lstset{%
+language={python},%
+basicstyle={\ttfamily\footnotesize},%ソースコードの文字を小さくする
+frame={single},
+commentstyle={\footnotesize\itshape},%コメントアウトの文字を小さくする
+breaklines=true,%行が長くなったときの改行。trueの場合は改行する。
+numbers=left,%行番号を左に書く。消す場合はnone。
+xrightmargin=3zw,%左の空白の大きさ
+xleftmargin=3zw,%右の空白の大きさ
+stepnumber=1,%行番号を1から始める場合こうする(たぶん)
+numbersep=1zw,%行番号と本文の間隔。
+}
+
+%\usepackage[dvipdfmx]{graphicx}
+%% color packageとdvipdfmxは相性が悪いらしい
+%% https://qiita.com/zr_tex8r/items/442b75b452b11bee8049
+\usepackage{graphicx}
+
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} %This changes the margins.
+\usepackage{float}
+%\author{Kyohei Okumura}
+\global\long\def\T#1{#1^{\top}}
+
+\newcommand{\id}{\textnormal{id}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mG}{\mathcal{G}}
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mN}{\mathcal{N}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mO}{\mathcal{O}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mR}{\mathcal{R}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mT}{\mathcal{T}}
+\newcommand{\mV}{\mathcal{V}}
+\renewcommand{\Re}{\mathrm{Re}}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\bar}{\overline}
+\renewcommand{\epsilon}{\varepsilon}
+% \renewcommand{\span}{\mathrm{span}}
+\newcommand{\defi}{\stackrel{\Delta}{\Longleftrightarrow}}
+\newcommand{\equi}{\Longleftrightarrow}
+\newcommand{\s}{\succsim}
+\newcommand{\p}{\precsim}
+\newcommand{\join}{\vee}
+\newcommand{\meet}{\wedge}
+\newcommand{\E}{\mathbbm{E}}
+\newcommand{\1}{\mathbbm{1}}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Card}{Card}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+
+\newcommand{\indep}{\mathop{\perp\!\!\!\!\perp}}
+
+\usepackage{color}
+\newcommand{\kcomment}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\ocomment}[1]{{\textcolor{red}{#1}}}
+
+
+\begin{document}
+\title{
+An Information Theoretic Framework For Designing Information Elicitation Mechanisms That Reward Truth-telling}
+\author{Kyohei OKUMURA
+%{\footnote{E-mail: kyohei.okumura@gmail.com}
+%\footnote{UTokyo Econ M2}}
+}
+\date{\today}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+	\item Kong \& Schoenebeck (2016, 2018)
+\end{itemize}
+\begin{screen}
+\paragraph{TO DO (August 30):}
+\begin{itemize}
+	\item Zero-one effort settingの方のメカニズムがどれぐらいすごいのかよくわからない．(strictnessあたりの定義をきちんと理解する必要．) p.12に「十分多くの他人が正直かつ常に全力なら自分もそうするのが最適」みたいなことが書いてある．Observation 4.2をよく検証する必要．
+	\item 平行して，permutation strategyあたりをキチンとする必要．dominantが最適とは言えないのか？(言えてほしい．) --言えるのでは？ただ，dominant strategyが他のpermutation strategyより厳密に利得大とは言えないということ？
+\end{itemize}	
+\end{screen}
+
+\begin{screen}
+\paragraph{IDEA:}
+\begin{itemize}
+	\item Partial verificationが可能な場合，何か良いことは起こらないのか？(例えば，メカニズムの良い性質を保ちつつメカニズムの支払いを少なくできたりはしないのか？)
+	\item 院生机配分．昨年よく来た人に机を配分したいが，中央当局側は参加者側の行動を観測できない．昨年きた頻度を自己申告させるとみんな自分に有利なように嘘をつく．どうやって情報を引き出す？
+\end{itemize}	
+\end{screen}
+
+
+\newpage
+\section{Multi-Question Setting}
+\subsection{Model}
+\begin{itemize}
+	\item A triple $(n, T, \Sigma)$ is called a \textbf{multi-question setting}.
+	\item Each agent $i \in [n]$ is required to answer $T$ questions.
+	\item Agent $i$ receives his private information about question $k \in [T]$, or $\sigma_i^k \in \Sigma$.
+	\item Agent $i$ is allowed to send a signal about question $k$, $\hat{\sigma}_i^k \in \Sigma$.
+	\item CP determines the payment according to the reported signal profile:
+	$$t((\hat{\sigma}_i^k)_{i,k}) = \left(t_1((\hat{\sigma}_i^k)_{i,k}), \dots, t_n((\hat{\sigma}_i^k)_{i,k}) \right).$$
+	\item Each agent $i$ has his own prior over agents' signals $Q_i \in \Delta(\Sigma^{n \times T})$. After receiving his own signal, he updates his prior conditional on his own signal: his interim belief is
+	$$
+	Q_i( \cdot \mid \Psi_i = \sigma_i) \in \Delta(\Sigma^{(n-1) \times T}), \text{ where } \Psi_i = (\Psi_i^k)_k, \sigma_i = (\sigma_i^k)_k
+	$$
+	\item \ocomment{There is the objective (true) probability distribution over signals, $Q_0 \in \Delta(\Sigma^{n \times T})$. The signal profile $(\Psi_i^k)_{i \in [n],k \in [T]}$ is drawn from $Q_0$.} $\Psi_i^k$ is a random variable, and its realization is denoted by $\sigma_i^k$.
+\end{itemize}
+
+\begin{rem}[minimal mechanisms]
+	Note that in general the set of signals that agents can send, $\mR$, need not coincide with the set of signals that agents receive, or $\Sigma$. We say that the mechanism is \textbf{minimal} if $\mR = \Sigma$.
+\end{rem}
+
+\paragraph{\ocomment{No effort setting}} Each agent $i$ has the private signals $(\sigma_i^k)_k$ inherently: He does not need to make an effort to obtain his signal. Agent $i$'s payoff is $t_i$.
+
+\textbf{The strategy of agent $i$ under no effort setting} is $s_i: \Sigma^{k} \to \Delta(\Sigma^k)$. Denote $\hat{\psi}_i^k := s_i(\sigma_i^k)$.
+
+
+
+\paragraph{\kcomment{Zero-one effort setting}}
+For each question $k$, each agent $i$ needs effort $e_i^k$ in order to obtain the signal $\sigma_i^k$. Agent $i$'s payoff is:
+$$t_i - \sum_k \1_{\{\text{$i$ makes an effort on $k$}\}} \cdot e_i^k.$$
+
+\textbf{The strategy of agent $i$ under zero-one effort setting} is a double $(\lambda_i, s_i)$:
+\begin{itemize}
+	\item \textbf{effort strategy} $\lambda_i := (\lambda_i^k)_k$: $\lambda_i^k \in [0,1]$ is the probability of making an effort on question $k$. If he makes an effort on $k$, he can obtain the signal $\sigma_i^k \in \Sigma$, paying a cost $e_i \in \R_+$; otherwise, he obtains the null signal $\emptyset$. The null signal is independent of other players' signals. Let $\psi_i^k$ be a signal that agent $i$ obtains about question $k$: $\psi_i^k$ is either $\sigma_i^k$ or $\emptyset$.
+	\item \textbf{report strategy} $s_i^k: \Sigma \cup \{ \emptyset \} \to \Sigma$. Denote $\hat{\psi}_i^k := s_i(\psi_i^k)$.
+\end{itemize}
+
+\begin{ass}[A priori similar and random order]. \label{apriori}
+\paragraph{A priori similar}
+	\[
+	\forall i \in [n] \forall k, k' \in [T]; \ Q_i^k = Q_i^{k'} \equiv Q_i, e_i^k = e_i^{k'} \equiv e_i
+	\]
+\paragraph{Random Order}
+All questions appear in a random order, independently drawn for each agent.
+\end{ass}
+
+\begin{df}[Consistent Strategies]
+	Agent $i$ plays a consistent strategy if 
+	\[
+	\forall k, k' \in [T]; \ \lambda_i^k = \lambda_i^{k'} \equiv \lambda_i, s_i^k = s_i^{k'} \equiv s_i.
+	\]
+	The strategy profile $s := (s_i^k)_{i,k}$ is said to be a consistent strategy profile if all agents play consistent strategies.
+\end{df}
+
+\begin{lem}[Dasgupta \& Ghosh (2013)]
+	Under Assumption \ref{apriori}, for all agents, using different strategies for different questions is \ocomment{the same [in what sense?]} as a mixed consistent strategy.
+\end{lem}
+\begin{proof}
+	\ocomment{[To be written.]}
+\end{proof}
+
+\begin{ass}[Consistency] \label{consistency}
+	We assume that all agents follow consistent strategies.
+\end{ass}
+
+\begin{screen}
+\begin{df}[$f$-mutual Information]
+	Let $X,Y \in \Sigma^\Omega$ be random variables, and $f \in \R^\R$ be a convex function such that $f(1) = 0$. First, we can define $f$-divergence, $D_f: \Delta(\Sigma) \times \Delta(\Sigma) \to \R$,
+	$$
+	D_f(p,q) := \sum_{\sigma \in \Sigma} p(\sigma) f \left( \frac{q(\sigma)}{p(\sigma)}\right)
+	$$
+	Then, $f$-mutual information is defined as follows:
+	$$
+	MI^f(X; Y) := D_f(U_{XY}, V_{XY})
+	$$
+	, where $U_{XY}(x,y) := \Pr(X=x, Y=y)$ and $V_{XY}(x,y) := \Pr(X=x) \Pr(Y=y)$.
+\end{df}	
+\end{screen}
+
+
+\paragraph{$f$-mutual Information Mechanism $\mM_{MI^f}$}
+Under Assumption \ref{apriori} and \ref{consistency}, the payment rule in $f$-mutual information mechanism is determined as follows:
+\begin{itemize}
+	\item Fix some convex function $f$ such that $f(1)=0$.
+	\item Fix any strategy profile $s = (s_i^k)_{i,k} \equiv (s_i)_i$. (Note that we assume consistency.)
+	\item Take some agent $j \neq i$ arbitrarily.
+	\item Let $P_i \in \Delta(\Sigma^2)$ be the joint distribution of the random variables $\hat{\Psi}_i^k \equiv \hat{\Psi}_i$ and $\hat{\Psi}_j^k \equiv \hat{\Psi}_j$. This distribution is uniquely determined once (1) $Q_i$, and (2) $s_i$ and $s_j$ (and $\lambda_i$ and $\lambda_j$ when we consider zero-one effort setting) are fixed.
+	\item $P \in \Delta(\Sigma)$ is calculated after CP receives all signals from all agents. $P$ is an empirical distribution of $\hat{\Psi}_i$ and $\hat{\Psi}_j$: When the number of observations is infinite,  $P$ is expected to be $P_0$ that corresponds to $P_i$ calculated by using the true prior $Q_0$.
+	(Glivenko–Cantelli theorem)
+\end{itemize}
+
+\begin{screen}
+\begin{eg}[Calculation of $P$]
+	Suppose that we have two agents, $i$ and $j$, and five jobs. Each job has a binary signal. Assume for simplicity that each agent reports his signal truthfully.
+	Consider the case where
+	\begin{itemize}
+		\item $\sigma_i = (1,1,0,1,0,1,1,1,1,0), \sigma_j = (1,1,1,0,0,1,1,1,0,0)$;
+		\item $e_i = (1,1,1,1,0,1,1,1,0,1), e_j = (1,1,1,0,1,0,1,1,1,1)$;
+		\item $\psi_i = (1,1,0,1,\emptyset,1,1,1,\emptyset,0), \psi_j = (1,1,1,\emptyset,0,\emptyset,1,1,0,0)$;
+		\item $\hat{\psi}_i = (1,1,0,1,1,1,1,1,0,0)$;
+		\item $\hat{\psi}_j = (1,1,1,0,0,1,1,1,0,0)$.
+	\end{itemize}
+	Note that the mechanism needs to know only the reported signals $\hat{\psi}_i, \hat{\psi}_j$ in order to construct $P$. In this case, 
+	\[
+	P(\hat{\Psi}_i = \psi_i, \hat{\Psi}_j = \psi_j) := \begin{cases}
+		0.5 & ((\psi_i, \psi_j) = (1,1)) \\
+		0.2 & ((\psi_i, \psi_j) = (1,0)) \\
+		0.1 & ((\psi_i, \psi_j) = (0,1)) \\
+		0.2 & ((\psi_i, \psi_j) = (0,0)) 
+	\end{cases}
+	\]
+\end{eg}	
+\end{screen}
+
+The payment rule $t_i: \Sigma^{n} \to \R_+$ is
+\[
+t_i(\hat{\Psi}_{i}, \hat{\Psi}_{-i}) := MI^f(\hat{\Psi}_i ; \hat{\Psi}_j), \text{ where $(\hat{\Psi}_i, \hat{\Psi}_j) \sim P$}.
+\]
+\begin{rem}
+	Agent $i$ believes that $(\hat{\Psi}_i, \hat{\Psi}_j) \sim P_i$.
+\end{rem}
+\begin{rem}
+	Since we assume consistency, each agent's reported signal profile can be represented by one random variable, though it is $T$ dimensional random variables in a precise sense.	Then, the payment rule $t_i$ can also be regarded as a function whose domain is $\R^n$, though its domain is $\R^{n \times T}$ in a precise sense.
+\end{rem}
+
+Here is one of the main results: the theorem for the multi-question setting.
+\begin{screen}
+\begin{thm}[$f$-mutual information mechanism is great.] \label{thm-multi}
+	Given $(n, T, \Sigma)$ and Ass.\ref{apriori}, suppose that $|T| = \infty$.
+	\begin{itemize}
+		\item In no effort setting, $\mM_{MI^f}$ is detail free, minimal, dominantly truthful, and truth-monotone.
+		\item In zero-one effort setting, $\mM_{MI^f}$ is detail free, minimal, dominantly informative, effort-monotone, and has the just desserts property. \ocomment{In addition, [strictness]}
+	\end{itemize}
+\end{thm}	
+\end{screen}
+
+
+
+In order to understand the statement of Thm.\ref{thm-multi}, we need to prepare some concepts.
+\paragraph{Some desirable properties of mechanisms}
+\begin{itemize}
+	\item The mechanism is \textbf{minimal} if agents are asked to report only their own signals. (Some mechanism asks each agent to report, for example, his forecast about other agents' signals.)
+	\item The mechanism is \textbf{detail free} if CP does not need to know about agents' priors when implementing the mechanism.
+	\item The mechanism is \ocomment{\textbf{dominantly truthful}} if, for any agent, truth-telling, i.e. $s_i = \text{id}$, maximizes his expected payoff regardless of the other agents' strategy.
+	\item The mechanism is \ocomment{\textbf{truth-monotone}} if for any strategy profile $s_{-i}$, if agent $i$ stops truth telling, then it does not increase every agent's expected payment.
+	\item The mechanism is \kcomment{\textbf{dominantly informative}} if every agent can maximize his payoff by either always investing no effort or always investing full effort and plays a permutation strategy regardless of the other agents' strategy.
+	%\item The dominantly informative mechanism is \kcomment{\textbf{strictly dominantly informative}} if for every agent $i$, if he believes that at least one other agent will always invest full effort and play $\mathbbm{T}$, then he will obtain strictly lower expected payoff by playing non-truthful report strategy than playing $\mathbbm{T}$ when $\lambda_i = 1$.
+	\item The mechanism is \kcomment{\textbf{(strictly) effort-monotone}} if for every agent, her optimal payment is (strictly) higher if more other agents invest full effort and play $\mathbf{T}$. \ocomment{[strictlyの定義よくわからず．]}
+	\item The mechanism has the \kcomment{\textbf{just desserts property}} if each agent's payoff is always non-negative and his expected payment is zero if she invests no effort.
+\end{itemize}
+
+
+
+\subsection{Preliminary}
+\subsubsection{Mutual Information Paradigm}
+\begin{df}[Informational-monotone Mutual Information $MI$]
+	$X,Y$: random variables. $X,Y \in  \mR^\Omega$.
+	A mutual information is a function $MI: \mR^\Omega \times \mR^\Omega \to \R$. $MI$ is said to be \textbf{information-monotone} if the following three conditions are satisfied:
+	\begin{enumerate}
+		\item \textbf{Symmetry}: $MI(X; Y) = MI(Y; X)$;
+		\item \textbf{Non-negativity}: $MI(X; Y) \geq 0$;
+		\item \textbf{Data-Processing Inequality}: For any transition matrix $M \in \R^{|\Sigma|} \times \R^{|\Sigma|}$, 
+		$$
+		M(X) \indep Y \mid X \implies MI(M(X); Y) \leq MI(X; Y).
+		$$
+	\end{enumerate}
+	
+	An information-monotone mutual information $MI$ is said to be \textbf{strictly information-monotone} if $MI$ additionally satisfies the following condition: For any \underline{non-permutation} transition matrix $M$, 
+		$$
+		M(X) \indep Y \mid X \implies MI(M(X); Y) < MI(X; Y).
+		$$
+\end{df}
+
+\begin{rem}[The condition for data-processing inequality]
+	The matrix $M$ represents a Marcov process: Once the realization of the random variable $X$ is fixed, $M(X)$ can work as a probability measure over $\Sigma$. The condition saids that, for any $x \in \Sigma$, the random variable that corresponds to the distribution $M(x) \in \Delta(\Sigma)$ is independent of the random variable $Y \mid X = x$.
+\end{rem}
+
+\begin{df}[Mutual Information Paradigm $MIP(MI)$]
+	Fix some informational-monotone mutual information $MI$. The following setting is called \textbf{MIP} and denoted as $MIP(MI)$:
+	\begin{itemize}
+	\item A double $(n, \Sigma)$ is called a \textbf{general setting}.
+	\item Agent $i$ receives his private information $\sigma_i \in \Sigma$; $\sigma_i$ is a realization of a random variable $\Psi_i$,
+	\item Agent $i$ is allowed to report a signal, $\hat{\sigma}_i \in \Sigma$; $\hat{\sigma}_i := s_i(\sigma_i)$
+	\item Each agent $i$ has his own prior over agents' signals $Q_i \in \Delta(\Sigma^{n})$. After receiving his own signal, he updates his prior conditional on his own signal.
+	\item \ocomment{There is the objective distribution $Q_0 \in \Delta(\Sigma^{n})$. The signal profile $(\Psi_i)_{i \in [n]}$ is drawn from $Q_0$.} $\Psi_i$ is a random variable, and its realization is represented by $\sigma_i$.
+	\item \textbf{Payment}: one agent $j \neq i$ is uniformly randomly picked, and $i$ receives his payment $MI(\hat{\Psi}_i; \hat{\Psi}_j)$, where $\hat{\Psi}_i := s_i(\Psi_i)$. \ocomment{Note that $MI$ need not be the same among agents. (???)}
+\end{itemize}
+\end{df}
+\begin{rem}[MIP is not a well-defined mechanism.]
+	MIP cannot compute the payment with only reported signals; it is not determined how to compute $MI(\cdot; \cdot)$. The mechanism is required to know full joint distribution over all agents' random private information. \ocomment{[$Q_0$だけ知っていればいいの？$Q_0$と各agentのprior $Q_i$との関係は？]}
+\end{rem}
+
+\begin{screen}
+	\begin{prop}[$MIP(MI)$ is dominantly truthful, and truth-monotone.] \label{prop_mip_noeffort}
+	Consider no effort settings. Given a general setting $(n, \Sigma)$, if $MI$ is information-monotone, $MIP(MI)$ is dominantly truthful and truth-monotone.
+	\end{prop}
+\end{screen}
+
+
+
+\begin{proof}
+	Fix any agent $i$. The signal that $i$ actually receives is denoted by a random variable $\Psi_i$. The signal reported by agent $j \neq i$ is denoted by $\hat{\Psi}_j$. Let $\hat{\Psi}_i := s_i(\Psi_i)$.
+	\paragraph{(i) dominantly truthful}
+	Observe that $s_i(\Psi_i)$ is independent of $\hat{\Psi}_j$ since 
+	$$
+	\Pr(s_i(\Psi_i) = \hat{\psi}_i \mid \hat{\Psi}_j = \hat{\psi}_j, \Psi_i = \psi_i)
+	= \Pr(s_i(\Psi_i) = \hat{\psi}_i \mid  \Psi_i = \psi_i).
+	$$
+	Therefore, 
+	\begin{align*}
+		[\text{i's expected payoff}] &= \sum_{j \neq i}\frac{1}{n-1} MI(\hat{\Psi}_i; \hat{\Psi}_j) \\
+		&= \sum_{j \neq i}\frac{1}{n-1} MI(s_i({\Psi}_i); \hat{\Psi}_j) \\
+		&\leq \sum_{j \neq i}\frac{1}{n-1} MI(\Psi_i; \hat{\Psi}_j) (\because \text{ $MI$: information-monotone})
+	\end{align*}
+	
+	\paragraph{(ii) truth-monotone}
+	Fix $k \neq i$. Suppose that $k$ is honestly reporting. We show that $i$'s payment decreases if $k$ stops reporting truthfully.
+	\begin{align*}
+		\sum_{j \neq i} \frac{1}{n-1} MI(\hat{\Psi}_i; \hat{\Psi}_j)
+		&= \sum_{j \neq i,k} \frac{1}{n-1} MI(\hat{\Psi}_i; \hat{\Psi}_j) + \frac{1}{n-1} MI(\hat{\Psi}_i; \Psi_k) \\
+		&\geq \sum_{j \neq i,k} \frac{1}{n-1} MI(\hat{\Psi}_i; \hat{\Psi}_j) + \frac{1}{n-1} MI(\hat{\Psi}_i; \hat{\Psi}_k) (\because \text{ $MI$: information-monotone})
+	\end{align*}
+ \end{proof}
+
+
+\subsubsection{MIP with Zero-one Effort}
+
+\begin{itemize}
+	\item In order to obtain the signal, each agent must make an effort $e_i$: his payoff is $t_i - e_i$.
+	\item effort strategy: $\lambda_i \in [0,1]$: agent $i$ makes an effort w.p. $\lambda_i$.
+	\item If the agent does not make an effort, he receives an independent null signal $\emptyset$.
+\end{itemize}
+
+\begin{df}[Convex Mutual Information]
+	For any random variables $X_1,X_2$ and a real number $\lambda \in [0,1]$, define a random variable $X$ as follows:
+	$$X := 
+	\begin{cases}
+		X_1 & (w.p. \ \lambda) \\
+		X_2 & (w.p. \ 1 - \lambda)
+	\end{cases}
+	$$
+	$MI$ is convex if for any random variables $X_1,X_2,Y$ and $\lambda \in [0,1]$,
+	$$
+	MI(X; Y) \leq \lambda MI(X_1; Y) + (1 - \lambda)MI(X_2; Y)
+	$$
+\end{df}
+
+\begin{screen}
+\begin{prop}[$MIP$ is dominantly informative, effort-monotone, and has just dessert property.]
+\label{prop_mip_effort}
+	Consider MIP with zero-one effort. If $MI$ is information-monotone and convex, then $MIP(MI)$ is dominantly informative, effort-monotone, and has just dessert property.
+\end{prop}
+\end{screen}
+
+\begin{rem}[An implication of dominant informativity and effort-monotonicity]
+\ocomment{[要検討]}
+	If a mechanism is dominantly informative and effort-monotone, this may imply that it is optimal for each agent to invest a full effort and play $\mathbbm{T}$:
+	\ocomment{if $\sum_{j \neq i} \frac{1}{n-1} MI(\Psi_i; \Psi_j) \geq e_i$, then it is optimal for agent $i$ to play such strategy. [これは正しいと思うけど，もう少し面白いこと言える？]}
+\end{rem}
+
+
+\begin{proof}[Proof of Prop.\ref{prop_mip_effort}]
+	Fix any agent $i$.
+	
+	\paragraph{(i) just dessert property}
+	The expected payoff of $i$ is always nonnegative since $MI$ is information-monotone (, and therefore nonnegative). Suppose that all agents except $i$ make no effort. Then, $MI(\hat{\Psi}_i; \hat{\Psi}_j) = 0$ for any $j \neq i$, and $i$'s payment is always zero.
+	
+	\paragraph{(ii) dominantly-informative}
+	Suppose that $i$'s effort strategy is $\lambda_i$ and his report strategy is $s_i$ conditional on full effort: $\hat{\Psi}_i := \lambda_i s_i(\Psi)_i + (1 - \lambda_i) X_i$, where $X_i$ is some random variable that is independent of other agents' signals.
+	\begin{align*}
+		\text{[$i$'s expected payoff]}
+		&= \sum_{j \neq i} \frac{1}{n-1} MI(\hat{\Psi}_i; \hat{\Psi}_j) - \lambda_i e_i \\
+		&\leq \sum_{j \neq i} \left[
+		\frac{1}{n-1} \lambda_i
+		\underbrace{MI(s_i(\Psi_i); \hat{\Psi}_j)}_{\leq MI(\Psi_i; \hat{\Psi}_j)}
+		+ (1 - \lambda_i)
+		\underbrace{MI(X_i; \hat{\Psi}_j)}_{=0}
+		\right]
+		 - \lambda_i e_i \\
+		&\leq \sum_{j \neq i} \left[
+		\frac{1}{n-1} \lambda_i MI(\Psi_i; \hat{\Psi}_j)
+		\right]
+		- \lambda_i e_i (\because \ X_i \indep \Psi_j) \\
+		&= \frac{1}{n-1} \sum_{j \neq i} \lambda_i \left[
+		\underbrace{
+		  MI(\Psi_i; \hat{\Psi}_j) - e_i
+		  }_{(*)}
+		\right] \\
+		&\leq \begin{cases}
+			\frac{1}{n-1} \sum_{j \neq i} \left[
+		  MI(\Psi_i; \hat{\Psi}_j) - e_i
+		\right] & ((*) \geq 0) \\
+		0 & ((*) < 0)
+		\end{cases}
+	\end{align*}
+	Therefore, either full effort or no effort is optimal.
+	%In case $MI$ is strictly information-monotone, the second inequality holds strictly.
+	
+	\paragraph{(iii) effort-monotone}
+	Fix $k \neq i$. Suppose that $k$ is not making a full effort and reporting his signal truthfully. Fix the strategies of all agents except $i$ and $k$. We show that if $k$ starts making an full effort and reporting his signal truthfully, $i$'s expected payment increases.
+	
+	In case it is optimal for agent $i$ to make no effort when $k$ is not making a full effort, $i$'s expected payment cannot decrease.
+	
+	Next, consider the case where it is optimal for agent $i$ to make a full effort and report the signal truthfully when $k$ is not making a full effort. Let $\hat{\Psi}_k := \lambda_k s_k(\Psi_k) + (1 - \lambda) X_k$.
+	\begin{align*}
+		&\text{[$i$'s optimal payment when $k$ does not invest a full effort]} \\
+		&= \sum_{j \neq i,k} \frac{1}{n-1} MI(\Psi_i; \hat{\Psi}_j) + \frac{1}{n-1} MI(\Psi_i; \hat{\Psi}_k) \\
+		&\leq \sum_{j \neq i,k} \frac{1}{n-1} MI(\Psi_i; \hat{\Psi}_j) + \frac{1}{n-1} \lambda_k MI(\Psi_i; s_k(\Psi_k)) +
+		\frac{1}{n-1} (1 - \lambda_k) \underbrace{
+		MI(\Psi_i; X_k)
+		}_{=0}  \ (\because \text{convexity})
+		\\
+		&\leq \sum_{j \neq i,k} \frac{1}{n-1} MI(\Psi_i; \hat{\Psi}_j) + \frac{1}{n-1} MI(\Psi_i; s_k(\Psi_k))\\
+		&\leq \sum_{j \neq i,k} \frac{1}{n-1} MI(\Psi_i; \hat{\Psi}_j) + \frac{1}{n-1} MI(\Psi_i; \Psi_k) \ (\because \text{information-monotonicity, symmetry})\\
+		&= \text{[$i$'s optimal payment when $k$ invests a full effort and plays $\mathbbm{T}$]}
+	\end{align*}
+	%In case $MI$ is strictly information monotone, the second inequality holds strictly if agent $k$'s strategy $s_k$ is non-permutation strategy. (strictly effort-monotone) \ocomment{[ここらへんの定義怪しい．]}
+\end{proof}
+
+\subsubsection{The proof of Thm.\ref{thm-multi}}
+\begin{lem}[$f$-mutual information is great.]
+	$MI^f$ is information-monotone and convex.
+\end{lem}
+\begin{proof}
+	\ocomment{[To be written.]}
+\end{proof}
+\begin{proof}[Proof of Thm.\ref{thm-multi}]
+Since we assume Assumption\ref{apriori}, we can assume w.o.l.g. that all agents' strategies are consistent. \ocomment{[本当に？]} 
+	Recall that in $\mM_{MI^f}$ the payment rule $t_i: \Sigma^{n} \to \R_+$ is
+\[
+t_i(\hat{\Psi}_{i}, \hat{\Psi}_{-i}) := MI^f(\hat{\Psi}_i ; \hat{\Psi}_j), \text{ where $(\hat{\Psi}_i, \hat{\Psi}_j) \sim P$},
+\]
+and $P$ is an empirical distribution of $\hat{\Psi}_i$ and $\hat{\Psi}_j$. If the number of questions is infinite, $P \simeq \Pr$; \ocomment{[要検討．大数の法則？Glivenko-Cantelli?]}
+\[
+	P(\hat{\Psi}_i = \sigma_i; \hat{\Psi}_j = \sigma_j) \simeq \Pr(\hat{\Psi}_i = \sigma_i; \hat{\Psi}_j = \sigma_j),
+\]
+where $\hat{\Psi}_i := \lambda_i s_i(\Psi_i) + (1 - \lambda_i) X_i$ and $X_i$ is a signal that is independent of other players' signals.
+Therefore, the $f$-mutual information mechanism is the same as $MIP(MI^f)$ in the multi-question setting. The theorem follows from Prop.\ref{prop_mip_noeffort} and Prop.\ref{prop_mip_effort}.
+\end{proof}
+
+
+%%%
+\section{Single-Question Setting}
+\subsection{Preliminary}
+\subsubsection{Bregman Mutual Information}
+\begin{df}[Proper Scoring Rule]
+	$PS: \Sigma \times \Delta(\Sigma) \to \R$ is said to be \textbf{proper scoring rule} if
+	$$
+	\tilde{\sigma} \sim p \implies p \in \argmax_{p' \in \Delta(\Sigma)} PS(\sigma, p)
+	$$
+	$\bar{PS}: \Delta(\Sigma) \times \Delta(\Sigma) \to \R$ is defined as
+	$$
+	\bar{PS}(p, q) := \E_{\tilde{\sigma} \sim p}[PS(\tilde{\sigma},q)]
+	= \sum_{\sigma} p(\sigma) PS(\sigma, q)
+	$$
+	If $PS$ is a proper scoring rule, $\bar{PS}$ is also said to be proper. We abuse the notation and $\bar{PS}$ is sometimes denoted by $PS$.
+\end{df}
+
+\begin{eg}[Log Scoring Rule is proper.]
+	$PS(\sigma, q) := \log(q(\sigma)) \equiv L(\sigma, q)$.
+\end{eg}
+
+\begin{df}[Bregman Divergence]
+	Let $PS$ be a proper scoring rule.
+	Bregman divergence $D_{PS}: \Delta(\Sigma) \times \Delta(\Sigma)$ is defined as
+	$$
+	D_{PS}(p,q) := PS(p,p) - PS(p,q)
+	$$
+\end{df}
+\begin{df}[Bregman Mutual Information]
+	Let $U_{Y \mid X = x}(Y = y) := \Pr(Y = y \mid X = x)$ and $U_Y(Y = y) := \Pr(Y = y)$. Bregman MI $BMI^{PS}: \R^\Omega \times \R^\Omega \to \R$ is defined as
+	\begin{align*}
+		BMI^{PS}(X; Y) &:= \E_X[ D_{PS}(U_{Y \mid X}, U_Y) ] \\
+		&= \E_X[PS(U_{Y \mid X}, U_{Y \mid X}) - PS(U_{Y \mid X}, U_Y)] \\
+		&= \E_X[PS(\Pr(Y \mid X), \Pr(Y \mid X)) - PS(\Pr(Y \mid X), \Pr(Y))]
+	\end{align*}
+	
+	
+\end{df}
+
+\begin{itemize}
+	\item log scoring rule can be used to construct an unbiased estimator of Shannon MI.
+\end{itemize}
+
+
+\begin{screen}
+\begin{thm}[expected accuracy gain = information gain]
+	Let $X,Y,Z$ be random variables.
+	\[
+	\E_{X,Z}\left[
+	L(Y, \Pr(Y \mid Z,X)) - L(Y, \Pr(Y \mid X))
+	\right]
+	= I(X;Y \mid Z)
+	\]
+\end{thm}
+\begin{cor}
+\[
+BMI^{L}(X;Y \mid Z) = I(X;Y \mid Z)
+\]	
+\end{cor}
+\end{screen}
+
+\begin{df}[Quasi Information-Monotone Mutual Information]
+	A mutual information $MI$ is \textbf{quasi information monotone} if it is nonnegative and satisfies the data processing inequality.
+\end{df}
+\begin{thm}
+	The Bregman MI is quasi information-monotone.
+\end{thm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

@@ -6,21 +6,21 @@
 
 
 ## Now Reading
+- [Kong, Schoenebeck (2016), An Information Theoretic Framework For Designing Information Elicitation Mechanisms That Reward Truth-telling](https://arxiv.org/abs/1605.01021)
 
 - [Besanko, Tong, Wu (RAND, 2018), Subsidizing research programs with “if” and “when” uncertainty in the face of severe informational constraints](https://onlinelibrary.wiley.com/doi/abs/10.1111/1756-2171.12227)
-
+r
 - [Valimaki (2018), Notes on Mechanism Design](notes/Valimaki_MD/valimaki_md.pdf)
 
 
 
 ## To Do
+### Peer Prediction
+- [Kong, Schoenebeck (EC18, 2018), Eliciting Expertise without Verification](https://dl.acm.org/citation.cfm?id=3219172)
+  - [Full version](https://arxiv.org/abs/1802.08312)
+
 ### Bounded Rationality
 - [Eyster, Rabin (2014, QJE), Extensive Imitation is Irrational and Harmful](https://academic.oup.com/qje/article/129/4/1861/1853662)
-
-- [Epstein, Halevy (2018, REStud), Ambiguous Correlation](https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdy008/4829922)
-  - aversion to ambiguity about relation v.s. aversion to ambiguity about bias?
-  - *[Need to study ambiguity in advance.]*
-  - [Machina, Siniscalchi (2014), Ambiguity and Ambiguity Aversion](https://www.sciencedirect.com/science/article/pii/B9780444536853000131)
 
 - [Matsushima (2018), Framing Game Theory](https://ideas.repec.org/p/tky/fseres/2017cf1072.html)
 
@@ -47,6 +47,12 @@
 
 - [Li (2017, AER), Obviously Strategy-Proof Mechanisms](https://www.aeaweb.org/articles?id=10.1257/aer.20160425)
 
+- [Epstein, Halevy (2018, REStud), Ambiguous Correlation](https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdy008/4829922)
+  - aversion to ambiguity about relation v.s. aversion to ambiguity about bias?
+  - *[Need to study ambiguity in advance.]*
+  - [Machina, Siniscalchi (2014), Ambiguity and Ambiguity Aversion](https://www.sciencedirect.com/science/article/pii/B9780444536853000131)
+
+
 ### Matching Auction
 - [Shapley, Shubik (1971), The assignment game I: The core](https://link.springer.com/article/10.1007/BF01753437)
 - [Crawford, Knoer (1981, ECMA), Job Matching with Heterogeneous Firms and Workers](https://www.jstor.org/stable/1913320?casa_token=eQ5WvciNyEIAAAAA:iIzljOQEUiWIwbEUxOYIfyhrrArpM5wPwuznjdLgvfaXDIPXdD5a5olBVCk5Zwtn-GVpSGuHdylZJnEkUQdRL-BFpb_0a2-KywFQcQrNAGdo3sfSzLA&seq=1#page_scan_tab_contents)
@@ -57,6 +63,12 @@
 ## Done
 
 **2018-08**
+- [Rees-Jones (2018, GEB), Suboptimal behavior in strategy-proof mechanisms: Evidence from the residency match](https://www.sciencedirect.com/science/article/pii/S0899825617300751)
+  - NRMP data suggests that a subpopulation of students appears to be misrepresenting their true preference ordering in an attempt at strategic behavior (even though they are told that the mechanism is SP.)
+  - Related literature:
+    - Theory: OSP
+    - Experiments: with advice etc.
+
 - [Edelman, Ostrovsky, Schwarz (2007, AER), Internet Advertising and the Generalized Second-Price Auction: Selling Billions of Dollars Worth of Keywords](https://www.aeaweb.org/articles?id=10.1257/aer.97.1.242)
   - Define and analyse GSPA (static, complete info) and GEA (dynamic, incomplete info).
   - GSPA has an envy-free equilibrium that has (1) the same revenue as in VDG, and (2) this eqm has the lowest revenue among EF eqm.
