@@ -1,0 +1,286 @@
+\documentclass[11pt,a4paper,dvipdfmx]{article}
+%\documentclass[autodetect-engine,dvipdfmx-if-dvi,ja=standard]{bxjsarticle}
+
+\usepackage{ascmac}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[noBBpl]{mathpazo}
+%\linespread{1.05}
+\usepackage{mathtools, amsmath, amssymb, amsthm}
+\usepackage{amsfonts}
+\usepackage{braket}
+%\usepackage{amssymb}
+\usepackage{url}
+\usepackage{bbm}
+
+%% citation
+\usepackage[longnamesfirst]{natbib}
+
+%
+%\theoremstyle{plain}
+%\newtheorem{thm}{Thm.}[section]
+%\newtheorem{lem}{Lem.}[section]
+%\newtheorem{cor}{Cor.}[section]
+%\newtheorem{prop}{Prop.}[section]
+%\newtheorem{df}{Def.}[section]
+%\newtheorem{eg}{e.g.}[section]
+%\newtheorem{rem}{Rem.}[section]
+%\theoremstyle{plain}
+\newtheorem{thm}{Thm.}
+\newtheorem{lem}{Lem.}
+\newtheorem{cor}{Cor.}
+\newtheorem{prop}{Prop.}
+\newtheorem{df}{Def.}
+\newtheorem{eg}{e.g.}
+\newtheorem{rem}{Rem.}
+%
+
+\usepackage{listings}
+\lstset{%
+language={python},%
+basicstyle={\ttfamily\footnotesize},%ソースコードの文字を小さくする
+frame={single},
+commentstyle={\footnotesize\itshape},%コメントアウトの文字を小さくする
+breaklines=true,%行が長くなったときの改行。trueの場合は改行する。
+numbers=left,%行番号を左に書く。消す場合はnone。
+xrightmargin=3zw,%左の空白の大きさ
+xleftmargin=3zw,%右の空白の大きさ
+stepnumber=1,%行番号を1から始める場合こうする(たぶん)
+numbersep=1zw,%行番号と本文の間隔。
+}
+
+%\usepackage[dvipdfmx]{graphicx}
+%% color packageとdvipdfmxは相性が悪いらしい
+%% https://qiita.com/zr_tex8r/items/442b75b452b11bee8049
+\usepackage{graphicx}
+
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} %This changes the margins.
+\usepackage{float}
+%\author{Kyohei Okumura}
+\global\long\def\T#1{#1^{\top}}
+
+\newcommand{\id}{\textnormal{id}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mG}{\mathcal{G}}
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mN}{\mathcal{N}}
+\newcommand{\mO}{\mathcal{O}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mT}{\mathcal{T}}
+\newcommand{\mV}{\mathcal{V}}
+\newcommand{\mW}{\mathcal{W}}
+\newcommand{\mX}{\mathcal{X}}
+\newcommand{\mZ}{\mathcal{Z}}
+\renewcommand{\Re}{\mathrm{Re}}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\bar}{\overline}
+\renewcommand{\epsilon}{\varepsilon}
+% \renewcommand{\span}{\mathrm{span}}
+\newcommand{\defi}{\stackrel{\Delta}{\Longleftrightarrow}}
+\newcommand{\equi}{\Longleftrightarrow}
+\newcommand{\s}{\succsim}
+\newcommand{\p}{\precsim}
+\newcommand{\join}{\vee}
+\newcommand{\meet}{\wedge}
+%\newcommand{\1}{\mbox{1}\hspace{-0.25em}\mbox{l}}
+\newcommand{\1}{\mathbbm{1}}
+\newcommand{\E}{\mathbbm{E}}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Card}{Card}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\spn}{span}
+
+\newcommand{\indep}{\mathop{\perp\!\!\!\!\perp}}
+
+\usepackage{color}
+\newcommand{\kcomment}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\ocomment}[1]{{\textcolor{red}{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title{サーチ活動}
+\author{Kyohei Okumura{\footnote{E-mail: kyohei.okumura@gmail.com}
+}}
+\date{\today}
+\maketitle
+
+\section{Kremer, Mansour and Perry (2014, JPE) \\ ``Implementing the Wisdom of the Crowd''}
+
+\begin{itemize}
+	\item Recommendation Mechanism
+	\begin{itemize}
+		\item Trip Advisor・AirBNB・食べログ・car navigation system・(Amazon) etc.
+	\end{itemize}
+	\item Information Design, Bandit with Incentives
+\end{itemize}
+\subsection{Model}
+\begin{itemize}
+	\item One central planner + $T$ agents
+	\item two arms: $A := \{a_1, a_2\}$
+	\item The arm $a_i$ has its reward $R_i$.
+	\begin{itemize}
+		\item Before exploration, no one knows the exact value of $R_i$; once someone explores $a_i$, CP knows its value. (deterministic reward)
+		\item $R_i \sim \pi_i, \ \E_{\pi_i}[R_i] = \mu_1, \ \mu_1 \geq \mu_2$.
+		\item $\pi$: the joint distribution, common knowledge.
+	\end{itemize}
+	\item Each agent $t$ knows his position in a line.
+	\item CP knows entire history: CP's recommendation, agents' choices, and their rewards.
+	\item CP commits to a message policy.
+	\item Each period, CP sends a message $m^t$ to agent $t$, agent $t$ decides the arm to choose, and agent $t$ receives his reward $R^t$.
+	\item Agent $t$ chooses the arm $a_i^* \in \arg \max_{a_i} \{\E[a_i \mid m^t]\}$
+	\item CP wants to maximize the social welfare:
+		$$\E\left[\frac{1}{T}R^t \right]$$
+	\item What is the best policy?
+\end{itemize}
+
+\subsection{Example}
+\begin{itemize}
+	\item $R_1 \sim U[-1,5], \ R_2 \sim U[-5,5]$. $\mu_1 = 2, \ \mu_2 = 0$.
+	\item Each agent arrives sequentially: agent $t$ arrives in period $t$.
+	\item Suppose for simplicity that CP wants to explore both arms as soon as possible.
+	\item NB: Agent 1 always chooses $a_1$.
+\end{itemize}
+
+\subsubsection{Full transparency}
+\begin{itemize}
+	\item If CP discloses all information, agent 2 explores $a_2$ only if $R_1 \leq 0$.
+\end{itemize}
+
+\subsubsection{Threshold policy}
+\begin{itemize}
+	\item Consider the following recommendation policy:
+	$$
+	m^2 := \begin{cases}
+		a_2 & (R_1 \leq 1) \\
+		a_1 & (R_1 > 1)
+	\end{cases}
+	$$
+	$$\E[R_1 \mid m^2 = a_2] = 0 \leq m_2$$
+	\item Whenever CP recommends $a_2$ to agent 2, agent 2 follows the recommendation.
+	\item Pr(exploration) $\uparrow$
+	\item As for agent $3$ we can construct the threshold policy:
+	$$
+	m^3 := \begin{cases}
+		a_2 & ([R_1 \leq 1, R_2 > R_1] \text{ or } [R_1 \in (1, 1+x]]) \\
+		a_1 & \text{o.w.}
+	\end{cases}
+	$$
+	\item In case $R_1 \in [-1,1]$, agent 2 explores $a_2$.
+	\item In case $R_1 \in (1, 1+x]$, agent 3 explores $a_3$.
+	\item $\dots$
+\end{itemize}
+
+\subsection{Results}
+\begin{itemize}
+	\item We can focus on the specific class of policies: \textit{recommendation policy}
+	\begin{itemize}
+		\item Revelation-principle-like argument
+		\item Myerson (1986), \textbf{Sugaya and Wolitzky (2017)}
+	\end{itemize}
+	\item The optimal policy takes the form of threshold policy.
+	\item Extension: Imperfect information about location, \textbf{stochastic reward}
+\end{itemize}
+
+\subsection{Related Literature}
+\subsubsection{Frazier et al. (2014, EC'14), ``Incentivizing Exploration''}
+\begin{itemize}
+	\item Use monetary transfer to resolve exploration-exploitation tradeoff.
+\end{itemize}
+\subsubsection{Bergemann and Valimaki (1996), ``Learning and Strategic Pricing''}
+\begin{itemize}
+	\item One consumer v.s. Many firms, firms = arms
+	\item Arms themselves can set strategic prices for begin pulled.
+\end{itemize}
+\subsubsection{Abraham et al.(2013), ``Adaptive Crowdsourcing Algorithms for the Bandit Survey Problem''}
+\begin{itemize}
+	\item crowd-sourcing of tasks
+	\item arms = agents
+	\item learn the quality of agents' work from observing them while providing enough incentives for them to work
+\end{itemize}
+
+\subsubsection{Mansour et al. (2018, EC'15), ``Bayesian Incentive-Compatible Bandit Exploration''}
+\begin{itemize}
+	\item Generalization of KMP (2014)
+	\item $K$ arms
+	\item stochastic rewards
+	\item detail-free
+	\item near-optimal performance(?)
+\end{itemize}
+
+\subsubsection{Bimplins et al. (Management Science,  forthcoming), ``Crowdsourcing Exploration''}
+\begin{itemize}
+	\item Generalization of KMP
+	\item two arms
+	\item stochastic rewards
+	\item less-than-fully informative policy
+	\item information design + monetary transfer
+	\item optimal (not first-best) policy can be obtained by solving large-scale LP (intractabel)
+	\item also propose a heuristic solution that is near-optimal in numerical experiments
+\end{itemize}
+
+
+\subsection{Possible Extension}
+\begin{itemize}
+	\item Bounded rationality?: It is not realistic to assume that agents are perfectly Bayesian-rational.
+	\begin{itemize}
+		\item ignorance of selection-bias?
+		\item Agents may not recognize the possibility that some firms incentivize reviewers by monetary payoffs.
+	\end{itemize}
+\end{itemize}
+
+\section{Others}
+\subsection{Bimpikins et al. (Operations Research, forthcoming) \\ ``Designing Dynamic Contests''}
+
+\begin{itemize}
+	\item contests, learning, dynamic competition, information design
+	\item Innovation contests by firms.
+	\begin{itemize}
+		\item outsource innovation to the crowd
+		\item winners are awarded by prize
+	\end{itemize}
+	\item How to best design a contest?
+	\begin{itemize}
+		\item What is the best information disclosure policy?: \\
+		Whether and when should the contest designer disclose the information regarding the competitors' partial progress?
+		\item What is the role of intermediate awards?
+	\end{itemize}
+	\item 成功するかどうかわからない．
+	\item 最初に成功した人のみが報酬をもらう．
+	\item Tradeoff: encouragement effect v.s. competition effect
+	\begin{itemize}
+		\item 他人が成功していることがわかる $\rightarrow$ 成功しやすいプロジェクトなので自分も参加したい．
+		\item 他人が成功していることがわかる $\rightarrow$ 自分が遅れていると，今から参入しても勝てなさそうなので参加したくない．
+	\end{itemize}
+\end{itemize}
+
+\subsection{Weyl and Zhang (2018), ``Depreciating Licenses''}
+\begin{itemize}
+	\item simple DMD
+\end{itemize}
+
+\subsection{Kleinberg, Waggoner and Weyl (2016), ``Descending Price Optimally Coordinates Search''}
+\begin{itemize}
+	\item information acquisition cost
+	\item Descending auctions are ``better'' than ascending auctions? 
+\end{itemize}
+\end{document}
