@@ -48,6 +48,4 @@
 
 #### Econometrics
 * [安井 (2020), 効果検証入門](https://gihyo.jp/book/2020/978-4-297-11117-5)
-  - [公式Github](https://github.com/ghmagazine/cibook)
-  - [python実装](https://qiita.com/nekoumei/items/648726e89d05cba6f432)
-  - [memo](https://www.overleaf.com/read/jmjzyxdrtxzk)
+  - [公式Github](https://github.com/ghmagazine/cibook), [python実装](https://qiita.com/nekoumei/items/648726e89d05cba6f432), [memo](https://www.overleaf.com/read/jmjzyxdrtxzk)
