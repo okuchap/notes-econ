@@ -1,6 +1,6 @@
 # notes-econ
 
-- Study notes on economics and related fields
+- Study notes on economics and related topics
 
 
 ## Reading lists

@@ -4,6 +4,7 @@
 ## Reading list
 ### Analysys
 * ルベーグ積分入門 (吉田) 7章以降(実解析の基本的道具・フーリエ解析・複素測度と有界変動)
+  - [零集合・可測修正・完備化についてのメモ](./doc/yoshida_lebesgue_null_set.pdf)
 * 工学のための関数解析 (山田)
 
 ### Probability theory
