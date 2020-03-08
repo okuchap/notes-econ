@@ -1,8 +1,15 @@
 # Notes on Mathematics
 
+## Schedule
+
+|資料|テーマ|日付|メモ|
+|--|--|--|--|
+|吉田ルベ 7.1|合成積|2020.03.08|合成積の定義・ヤングの不等式|
+
+
 
 ## Reading list
-### Analysys
+### Analysis
 * [ルベーグ積分入門 (吉田)](http://www.math.nagoya-u.ac.jp/~noby/leb.html) 7章以降(実解析の基本的道具・フーリエ解析・複素測度と有界変動)
   - [零集合・可測修正・完備化についてのメモ](https://www.overleaf.com/read/jwjgkpdcpqwm)
 
